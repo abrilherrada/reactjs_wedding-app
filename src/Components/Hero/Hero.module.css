@@ -1,0 +1,129 @@
+.heroContainer {
+  width: 100%;
+  color: #323232;
+  padding-top: 6rem;
+}
+
+.headline {
+  font-family: "Staatliches", serif;
+  font-size: clamp(3.5rem, 18vw, 10rem);
+  text-align: center;
+  line-height: 1;
+  margin: 0 0 1rem 0;
+  letter-spacing: 1px;
+}
+
+.imageContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.heroImage {
+  width: 95%;
+  max-width: 1190px;
+  height: auto;
+  border-radius: 5px;
+  border: 2px solid #323232;
+  box-shadow: 4px 4px #323232;
+  filter: grayscale(100%);
+}
+
+.imageCaption {
+  font-family: "Cutive", serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  margin: 0;
+  padding: 0 1.5rem;
+  text-align: justify;
+}
+
+.articleContent {
+  padding: 1.5rem 1rem;
+}
+
+.articleHeadline {
+  font-family: "Staatliches", serif;
+  font-size: clamp(2rem, 10vw, 4rem);
+  margin: 0;
+  text-align: center;
+  line-height: 1;
+}
+
+.articleText {
+  font-family: "Cutive", serif;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: justify;
+}
+
+.articleText p {
+  margin-block-end: 0;
+}
+
+.expandableContent {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.expanded {
+  max-height: 3000px;
+  transition: max-height 0.5s ease-in;
+}
+
+.readMoreBtn {
+  font-family: "Staatliches", serif;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem auto;
+  padding: 0.25rem 0.5rem;
+  color: #323232;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 2px solid #323232;
+  box-shadow: 4px 4px #323232;
+}
+
+.arrow {
+  transition: transform 0.5s ease;
+  color: #323232;
+}
+
+.arrowUp {
+  transform: rotate(180deg);
+}
+
+
+@media (min-width: 768px) {
+  .imageCaption {
+    font-size: 1rem;
+  }
+
+  .articleContent {
+    padding: 1.5rem;
+  }
+
+  .articleText {
+    font-size: 1.2rem;
+  }
+
+  .readMoreBtn {
+    font-size: 1.5rem;
+    margin: 1.5rem auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .articleContent {
+    padding: 2rem;
+  }
+
+  .articleText p {
+    margin-block-start: 1.5em;
+  }
+}

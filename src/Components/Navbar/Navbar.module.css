@@ -2,14 +2,17 @@
   position: fixed;
   width: 100%;
   font-family: "Staatliches", serif;
+  z-index: 1;
+  background-color: #f9f7f1;
 }
 
 .navbarContainer {
   border-radius: 5px;
   border: 2px solid #323232;
-  background-color: #fff;
   box-shadow: 4px 4px #323232;
   color: #323232;
+  margin: 0.3rem 0.5rem 0 0.3rem;
+  background-color: #fff;
 }
 
 .navbarBrand {

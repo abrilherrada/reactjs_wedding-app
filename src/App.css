@@ -5,6 +5,14 @@
   src: url(./assets/fonts/Staatliches-Regular.ttf) format("truetype");
 }
 
+@font-face {
+  font-family: "Cutive";
+  font-weight: 400;
+  font-style: normal;
+  src: url(./assets/fonts/Cutive-Regular.ttf) format("truetype");
+}
+
 body {
   margin: 0;
+  background-color: #f9f7f1;
 }
