@@ -10,12 +10,12 @@ const EventInfo = () => {
   };
 
   return (
-    <div className={styles.eventInfoContainer}>
-      <div className={styles.title}>
+    <section className={styles.eventInfoContainer}>
+      <header className={styles.title}>
         <h2>INFORMACIÓN&nbsp;</h2>
         <h2>DEL EVENTO</h2>
-      </div>
-      <div className={styles.infoSection}>
+      </header>
+      <article className={styles.infoSection}>
         <p>
           <span className={styles.infoTitle}>Fecha:&nbsp;</span>
           <span className={styles.infoText}>30/08/25</span>
@@ -28,7 +28,7 @@ const EventInfo = () => {
           <span className={styles.infoTitle}>Lugar:&nbsp;</span>
           <span className={styles.infoText}>Estancia El Rosal, Agua de Oro, Córdoba, Argentina</span>
         </p>
-      </div>
+      </article>
       <div className={styles.mapContainer}>
         <iframe
           src={googleMapsUrl}
@@ -42,7 +42,7 @@ const EventInfo = () => {
         Abrir en Google Maps
       </Button>
       <p className={styles.clarification}>(Te recomendamos que uses esta ubicación, ya que, si buscás el salón por nombre en Google Maps, hay más de un resultado, y podés terminar demorando más de lo previsto en llegar).</p>
-    </div>
+    </section>
   );
 };
 

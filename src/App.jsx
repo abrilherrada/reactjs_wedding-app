@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Navbar from './Components/Navbar/Navbar';
 import Hero from './Components/Hero/Hero';
 import Countdown from './Components/Countdown/Countdown';
@@ -11,15 +11,19 @@ const App = () => {
     <Router>
       <div className="App">
         <Navbar />
-        <Routes>
-          <Route path="/" element={<div></div>} />
-          <Route path="/rsvp" element={<div>RSVP Page</div>} />
-          <Route path="/info" element={<div>Info Page</div>} />
-          <Route path="/faq" element={<div>FAQ Page</div>} />
-        </Routes>
-        <Hero/>
-        <Countdown/>
-        <EventInfo/>
+        <main>
+          <Hero />
+          <Countdown />
+          <div id="info">
+            <EventInfo />
+          </div>
+          <div id="rsvp">
+            <div>RSVP Page</div>
+          </div>
+          <div id="faq">
+            <div>FAQ Page</div>
+          </div>
+        </main>
       </div>
     </Router>
   )

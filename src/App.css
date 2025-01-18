@@ -12,6 +12,10 @@
   src: url(./assets/fonts/Cutive-Regular.ttf) format("truetype");
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   background-color: #f9f7f1;

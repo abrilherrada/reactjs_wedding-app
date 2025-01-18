@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
@@ -13,9 +12,9 @@ const Navbar = () => {
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
         <div className={styles.navbarBrand}>
-          <Link to="/" className={styles.navbarLogo}>
+          <a href="#" className={styles.navbarLogo}>
             Abril & Juan
-          </Link>
+          </a>
           <button 
             className={`${styles.hamburger} ${isOpen ? styles.active : ''}`} 
             onClick={toggleMenu}
@@ -27,18 +26,18 @@ const Navbar = () => {
         </div>
 
         <div className={`${styles.navbarMenu} ${isOpen ? styles.active : ''}`}>
-          <Link to="/" className={styles.navItem} onClick={toggleMenu}>
+          <a href="#" className={styles.navItem} onClick={toggleMenu}>
             Home
-          </Link>
-          <Link to="/rsvp" className={styles.navItem} onClick={toggleMenu}>
-            RSVP
-          </Link>
-          <Link to="/info" className={styles.navItem} onClick={toggleMenu}>
+          </a>
+          <a href="#info" className={styles.navItem} onClick={toggleMenu}>
             Info
-          </Link>
-          <Link to="/faq" className={styles.navItem} onClick={toggleMenu}>
+          </a>
+          <a href="#rsvp" className={styles.navItem} onClick={toggleMenu}>
+            RSVP
+          </a>
+          <a href="#faq" className={styles.navItem} onClick={toggleMenu}>
             FAQ
-          </Link>
+          </a>
         </div>
       </div>
     </nav>

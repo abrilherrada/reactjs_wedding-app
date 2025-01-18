@@ -35,7 +35,7 @@ const Countdown = () => {
     }, []);
 
     return (
-      <div className={styles.countdownContainer}>
+      <section className={styles.countdownContainer}>
         <div className={styles.countdown}>
             <FlipUnitContainer
                 unit="days"
@@ -58,7 +58,7 @@ const Countdown = () => {
                 label="Segundos"
             />
         </div>
-      </div>
+      </section>
     );
 };
 
