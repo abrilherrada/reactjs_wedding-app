@@ -23,6 +23,7 @@ const FlipUnitContainer = ({ digit, label }) => {
     const previousDigit = prevDigit < 10 ? `0${prevDigit}` : prevDigit;
 
     return (
+      <div className="countUnitContainer">
         <div className={styles.flipUnitContainer}>
             <StaticCard 
                 position={'upperCard'} 
@@ -38,8 +39,9 @@ const FlipUnitContainer = ({ digit, label }) => {
                     <AnimatedCard digit={currentDigit} animation="unfold" />
                 </>
             )}
-            <span className={styles.label}>{label}</span>
         </div>
+        <span className={styles.label}>{label}</span>
+      </div>
     );
 };
 

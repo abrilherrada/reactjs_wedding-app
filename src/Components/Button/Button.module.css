@@ -1,0 +1,28 @@
+.button {
+  font-family: "Staatliches", serif;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem auto 0 auto;
+  padding: 0.25rem 0.5rem;
+  color: #323232;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 2px solid #323232;
+  box-shadow: 4px 4px #323232;
+  background-color: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px #323232;
+}
+
+@media (min-width: 768px) {
+  .button {
+    font-size: 1.5rem;
+    margin: 1.5rem auto 0 auto;
+  }
+}

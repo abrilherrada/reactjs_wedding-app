@@ -74,21 +74,6 @@
   transition: max-height 0.5s ease-in;
 }
 
-.readMoreBtn {
-  font-family: "Staatliches", serif;
-  font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 1rem auto 0 auto;
-  padding: 0.25rem 0.5rem;
-  color: #323232;
-  cursor: pointer;
-  border-radius: 5px;
-  border: 2px solid #323232;
-  box-shadow: 4px 4px #323232;
-}
-
 .arrow {
   transition: transform 0.5s ease;
   color: #323232;

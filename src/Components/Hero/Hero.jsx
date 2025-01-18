@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Button from '../Button/Button';
 import styles from './Hero.module.css';
 
 const Hero = () => {
@@ -35,8 +36,7 @@ const Hero = () => {
             </p>
           </div>
 
-          <button 
-            className={styles.readMoreBtn}
+          <Button 
             onClick={() => setIsExpanded(!isExpanded)}
           >
             <span>
@@ -58,7 +58,7 @@ const Hero = () => {
                 strokeLinejoin="round"
               />
             </svg>
-          </button>
+          </Button>
         </div>
       </article>
     </section>
