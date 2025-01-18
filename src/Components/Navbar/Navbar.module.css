@@ -3,16 +3,16 @@
   width: 100%;
   font-family: "Staatliches", serif;
   z-index: 1;
-  background-color: #f9f7f1;
+  background-color: var(--background-container);
 }
 
 .navbarContainer {
   border-radius: 5px;
-  border: 2px solid #323232;
-  box-shadow: 4px 4px #323232;
-  color: #323232;
+  border: var(--border);
+  box-shadow: var(--shadow-primary);
+  color: var(--text);
   margin: 0.3rem 0.5rem 0 0.3rem;
-  background-color: #fff;
+  background-color: var(--background-container);
 }
 
 .navbarBrand {
@@ -26,7 +26,7 @@
   text-decoration: none;
   font-size: 2rem;
   font-weight: bold;
-  color: #333;
+  color: var(--text);
 
 }
 
@@ -42,7 +42,7 @@
   width: 25px;
   height: 3px;
   margin: 5px auto;
-  background-color: #333;
+  background-color: var(--text);
   transition: all 0.3s ease-in-out;
 }
 
@@ -60,7 +60,7 @@
 
 .navbarMenu {
   display: none;
-  border-top: 2px solid #323232;
+  border-top: var(--border);
 }
 
 .navbarMenu.active {
@@ -71,7 +71,7 @@
 
 .navItem {
   text-decoration: none;
-  color: #333;
+  color: var(--text);
   font-size: 1.3rem;
   transition: color 0.3s ease;
   padding: 1rem;
@@ -80,8 +80,8 @@
 }
 
 .navItem:hover {
-  color: #ffffff;
-  background-color: #323232;
+  color: var(--background-container);
+  background-color: var(--text);
 }
 
 @media (min-width: 768px) {

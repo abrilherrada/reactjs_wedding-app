@@ -9,7 +9,7 @@
 .title {
   font-family: "Staatliches", serif;
   font-size: 2rem;
-  color: #333;
+  color: var(--text);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -27,7 +27,7 @@
 
 .infoSection p {
   margin: 0.5rem 0;
-  color: #323232;
+  color: var(--text);
 }
 
 .infoTitle {
@@ -53,8 +53,8 @@
   height: auto;
   aspect-ratio: 9/6;
   border-radius: 5px;
-  border: 2px solid #323232;
-  box-shadow: 4px 4px #323232;
+  border: var(--border);
+  box-shadow: var(--shadow-primary);
   filter: grayscale(100%);
   box-sizing: border-box;
 }
@@ -62,7 +62,7 @@
 .clarification {
   font-family: "Cutive", serif;
   font-size: 0.9rem;
-  color: #323232;
+  color: var(--text);
   margin: 0;
   padding: 2rem 1rem 0 1rem;
   text-align: center;

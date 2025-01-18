@@ -1,6 +1,6 @@
 .heroContainer {
   width: 100%;
-  color: #323232;
+  color: var(--text);
   padding-top: 6rem;
 }
 
@@ -26,8 +26,8 @@
   max-width: 1190px;
   height: auto;
   border-radius: 5px;
-  border: 2px solid #323232;
-  box-shadow: 4px 4px #323232;
+  border: var(--border);
+  box-shadow: var(--shadow-primary);
   filter: grayscale(100%);
 }
 
@@ -76,7 +76,7 @@
 
 .arrow {
   transition: transform 0.5s ease;
-  color: #323232;
+  color: var(--text);
 }
 
 .arrowUp {

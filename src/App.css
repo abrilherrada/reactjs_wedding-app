@@ -12,11 +12,28 @@
   src: url(./assets/fonts/Cutive-Regular.ttf) format("truetype");
 }
 
+:root {
+  /* Background colors */
+  --background-body: #f9f7f1;
+  --background-container: #ffffff;
+  
+  /* Text Colors */
+  --text: #323232;
+  
+  /* Border Colors */
+  --border: 2px solid #323232;
+  --border-subtle: 0.5px solid rgba(0, 0, 0, 0.1);
+  
+  /* Box Shadow */
+  --shadow-primary: 4px 4px #323232;
+  --shadow-hover: 2px 2px #323232;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background-color: #f9f7f1;
+  background-color: var(--background-body);
 }
