@@ -1,0 +1,80 @@
+.container {
+  text-align: center;
+  padding: 1rem;
+}
+
+.title {
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  color: var(--color-text);
+}
+
+.guestList {
+  margin-bottom: 2rem;
+}
+
+.guestGroup {
+  margin-bottom: 1.5rem;
+}
+
+.groupTitle {
+  text-align: left;
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.guestItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.guestName {
+  font-weight: 500;
+}
+
+.status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.attending {
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.notAttending {
+  background-color: var(--color-error-light);
+  color: var(--color-error);
+}
+
+.additionalInfo {
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.infoItem {
+  margin-bottom: 1rem;
+}
+
+.infoItem strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+}
+
+.infoItem p {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.modifyButton {
+  margin-top: 1rem;
+  background-color: var(--color-primary);
+}
