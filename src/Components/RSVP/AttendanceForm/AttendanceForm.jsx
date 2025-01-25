@@ -1,96 +1,197 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { updateRSVPStatus } from '../../../services/services';
+import { GuestInfoShape } from '../propTypes';
 import Button from '../../Button/Button';
 import Modal from '../../Modal/Modal';
 import styles from './AttendanceForm.module.css';
 
-const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = false }) => {
-  const [submitting, setSubmitting] = useState(false);
-  const [decliningAll, setDecliningAll] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showDeclineModal, setShowDeclineModal] = useState(false);
-  const [status, setStatus] = useState({ type: null, message: null });
-  const [formData, setFormData] = useState({
+// Define action types as constants
+const ACTIONS = {
+  SET_FORM_DATA: 'SET_FORM_DATA',
+  UPDATE_GUEST_ATTENDANCE: 'UPDATE_GUEST_ATTENDANCE',
+  UPDATE_FIELD: 'UPDATE_FIELD',
+  SET_SUBMITTING: 'SET_SUBMITTING',
+  SET_DECLINING_ALL: 'SET_DECLINING_ALL',
+  SET_STATUS: 'SET_STATUS',
+  TOGGLE_CONFIRM_MODAL: 'TOGGLE_CONFIRM_MODAL',
+  TOGGLE_DECLINE_MODAL: 'TOGGLE_DECLINE_MODAL',
+  RESET_STATUS: 'RESET_STATUS'
+};
+
+// Initial state factory function
+const createInitialState = (guestInfo) => ({
+  formData: {
     mainGuest: { ...guestInfo.mainGuest },
     companion: guestInfo.hasCompanion ? { ...guestInfo.companion } : null,
     children: guestInfo.hasChildren ? [...guestInfo.children] : [],
     dietaryRestrictionsInGroup: guestInfo.dietaryRestrictionsInGroup || '',
     songRequest: guestInfo.songRequest || '',
     additionalNotes: guestInfo.additionalNotes || ''
-  });
+  },
+  submitting: false,
+  decliningAll: false,
+  showConfirmModal: false,
+  showDeclineModal: false,
+  status: { type: null, message: null }
+});
+
+// Reducer function
+const formReducer = (state, action) => {
+  switch (action.type) {
+    case ACTIONS.SET_FORM_DATA:
+      return {
+        ...state,
+        formData: action.payload
+      };
+    case ACTIONS.UPDATE_GUEST_ATTENDANCE: {
+      const { guestType, index, attending } = action.payload;
+      if (guestType === 'children') {
+        const updatedChildren = [...state.formData.children];
+        updatedChildren[index] = { ...updatedChildren[index], attending };
+        return {
+          ...state,
+          formData: {
+            ...state.formData,
+            children: updatedChildren
+          }
+        };
+      }
+      return {
+        ...state,
+        formData: {
+          ...state.formData,
+          [guestType]: { ...state.formData[guestType], attending }
+        }
+      };
+    }
+    case ACTIONS.UPDATE_FIELD:
+      return {
+        ...state,
+        formData: {
+          ...state.formData,
+          [action.payload.field]: action.payload.value
+        }
+      };
+    case ACTIONS.SET_SUBMITTING:
+      return {
+        ...state,
+        submitting: action.payload,
+        ...(action.payload === false && { showConfirmModal: false })
+      };
+    case ACTIONS.SET_DECLINING_ALL:
+      return {
+        ...state,
+        decliningAll: action.payload,
+        ...(action.payload === false && { showDeclineModal: false })
+      };
+    case ACTIONS.SET_STATUS:
+      return {
+        ...state,
+        status: action.payload
+      };
+    case ACTIONS.TOGGLE_CONFIRM_MODAL:
+      return {
+        ...state,
+        showConfirmModal: action.payload
+      };
+    case ACTIONS.TOGGLE_DECLINE_MODAL:
+      return {
+        ...state,
+        showDeclineModal: action.payload
+      };
+    case ACTIONS.RESET_STATUS:
+      return {
+        ...state,
+        status: { type: null, message: null }
+      };
+    default:
+      return state;
+  }
+};
+
+// Error handling utility
+const getErrorMessage = (error) => {
+  if (error.message?.includes('Network')) {
+    return 'No pudimos conectarnos al servidor. Por favor, verificá tu conexión a internet.';
+  }
+  if (error.response?.status === 404) {
+    return 'No pudimos encontrar tu invitación. Por favor, verificá el link.';
+  }
+  if (error.response?.status === 400) {
+    return 'Los datos ingresados no son válidos. Por favor, intentá de nuevo.';
+  }
+  if (error.response?.status === 409) {
+    return 'Ya no es posible modificar tu respuesta. Si necesitás hacer cambios, contactanos directamente.';
+  }
+  return 'Hubo un error al guardar tu respuesta. Por favor, intentá de nuevo.';
+};
+
+const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = false }) => {
+  const [state, dispatch] = useReducer(formReducer, guestInfo, createInitialState);
+  const [anyAttending, setAnyAttending] = useState(false);
 
   // Update form data when guestInfo changes
   useEffect(() => {
-    setFormData({
-      mainGuest: { ...guestInfo.mainGuest },
-      companion: guestInfo.hasCompanion ? { ...guestInfo.companion } : null,
-      children: guestInfo.hasChildren ? [...guestInfo.children] : [],
-      dietaryRestrictionsInGroup: guestInfo.dietaryRestrictionsInGroup || '',
-      songRequest: guestInfo.songRequest || '',
-      additionalNotes: guestInfo.additionalNotes || ''
-    });
+    dispatch({ type: ACTIONS.SET_FORM_DATA, payload: createInitialState(guestInfo).formData });
   }, [guestInfo]);
 
   // Pre-check main guest's checkbox if they're the only guest
   useEffect(() => {
     if (!isModifying && !guestInfo.hasCompanion && !guestInfo.hasChildren) {
-      setFormData(prevData => ({
-        ...prevData,
-        mainGuest: { ...prevData.mainGuest, attending: true }
-      }));
+      dispatch({
+        type: ACTIONS.UPDATE_GUEST_ATTENDANCE,
+        payload: { guestType: 'mainGuest', index: null, attending: true }
+      });
     }
   }, []); // Only run on mount
 
-  // Handle main guest or companion attendance
-  const handleSingleGuestAttendance = (guestType) => (e) => {
-    const attending = e.target.checked;
-    setFormData(prev => ({
-      ...prev,
-      [guestType]: { ...prev[guestType], attending }
-    }));
-  };
+  // Update anyAttending whenever formData changes
+  useEffect(() => {
+    const isAnyoneAttending = state.formData.mainGuest?.attending || 
+      (guestInfo.hasCompanion && state.formData.companion?.attending) ||
+      (guestInfo.hasChildren && state.formData.children.some(child => child.attending));
+    
+    setAnyAttending(isAnyoneAttending);
+  }, [state.formData, guestInfo.hasCompanion, guestInfo.hasChildren]);
 
-  // Handle child attendance
-  const handleChildAttendance = (index) => (e) => {
-    const attending = e.target.checked;
-    setFormData(prev => {
-      const updatedChildren = [...prev.children];
-      updatedChildren[index] = { ...updatedChildren[index], attending };
-      return { ...prev, children: updatedChildren };
+  const handleAttendanceChange = useCallback((guestType, index = null) => (e) => {
+    dispatch({
+      type: ACTIONS.UPDATE_GUEST_ATTENDANCE,
+      payload: { guestType, index, attending: e.target.checked }
+    });
+  }, []);
+
+  const handleInputChange = (field) => (e) => {
+    dispatch({
+      type: ACTIONS.UPDATE_FIELD,
+      payload: { field, value: e.target.value }
     });
   };
 
-  const handleInputChange = (field) => (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: e.target.value
-    }));
-  };
-
-  const generateSummaryMessage = () => {
+  const summaryMessage = useMemo(() => {
     const attending = [];
     const notAttending = [];
 
     // Add main guest
-    if (formData.mainGuest.attending) {
-      attending.push(formData.mainGuest.name);
+    if (state.formData.mainGuest.attending) {
+      attending.push(state.formData.mainGuest.name);
     } else {
-      notAttending.push(formData.mainGuest.name);
+      notAttending.push(state.formData.mainGuest.name);
     }
 
     // Add companion if exists
-    if (guestInfo.hasCompanion && formData.companion) {
-      if (formData.companion.attending) {
-        attending.push(formData.companion.name);
+    if (guestInfo.hasCompanion && state.formData.companion) {
+      if (state.formData.companion.attending) {
+        attending.push(state.formData.companion.name);
       } else {
-        notAttending.push(formData.companion.name);
+        notAttending.push(state.formData.companion.name);
       }
     }
 
     // Add children if any
-    if (guestInfo.hasChildren && formData.children.length > 0) {
-      formData.children.forEach(child => {
+    if (guestInfo.hasChildren && state.formData.children.length > 0) {
+      state.formData.children.forEach(child => {
         if (child.attending) {
           attending.push(child.name);
         } else {
@@ -109,74 +210,69 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
       message += 'No asistirán:\n' + notAttending.join('\n') + '\n\n';
     }
 
-    if (formData.dietaryRestrictionsInGroup) {
-      message += `Restricciones alimentarias:\n${formData.dietaryRestrictionsInGroup}\n\n`;
+    if (anyAttending && state.formData.dietaryRestrictionsInGroup) {
+      message += `Restricciones alimentarias:\n${state.formData.dietaryRestrictionsInGroup}\n\n`;
     }
 
-    if (formData.songRequest) {
-      message += `Canción solicitada:\n${formData.songRequest}\n\n`;
+    if (state.formData.songRequest) {
+      message += `Canción solicitada:\n${state.formData.songRequest}\n\n`;
     }
 
-    if (formData.additionalNotes) {
-      message += `Notas adicionales:\n${formData.additionalNotes}`;
+    if (state.formData.additionalNotes) {
+      message += `Notas adicionales:\n${state.formData.additionalNotes}`;
     }
 
     return message.trim();
-  };
+  }, [state.formData, guestInfo.hasCompanion, guestInfo.hasChildren, anyAttending]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setShowConfirmModal(true);
+    dispatch({ type: ACTIONS.TOGGLE_CONFIRM_MODAL, payload: true });
   };
 
   const handleConfirmSubmit = async () => {
-    setSubmitting(true);
-    setStatus({ type: null, message: null });
+    dispatch({ type: ACTIONS.SET_SUBMITTING, payload: true });
+    dispatch({ type: ACTIONS.RESET_STATUS });
 
     try {
-      // Check if any guest is attending
-      const anyAttending = formData.mainGuest?.attending || 
-        (guestInfo.hasCompanion && formData.companion?.attending) ||
-        (guestInfo.hasChildren && formData.children.some(child => child.attending));
-
       // If no one is attending and this is not a modification, set all to false
       const updateData = {
         invitationId: guestInfo.invitationId,
         mainGuest: {
-          ...formData.mainGuest,
-          attending: !isModifying && !anyAttending ? false : formData.mainGuest?.attending
+          ...state.formData.mainGuest,
+          attending: !isModifying && !anyAttending ? false : state.formData.mainGuest?.attending
         },
         companion: guestInfo.hasCompanion ? {
-          ...formData.companion,
-          attending: !isModifying && !anyAttending ? false : formData.companion?.attending
+          ...state.formData.companion,
+          attending: !isModifying && !anyAttending ? false : state.formData.companion?.attending
         } : null,
-        children: guestInfo.hasChildren ? formData.children.map(child => ({
+        children: guestInfo.hasChildren ? state.formData.children.map(child => ({
           ...child,
           attending: !isModifying && !anyAttending ? false : child.attending
         })) : [],
-        dietaryRestrictionsInGroup: formData.dietaryRestrictionsInGroup,
-        songRequest: formData.songRequest,
-        additionalNotes: formData.additionalNotes
+        dietaryRestrictionsInGroup: anyAttending ? state.formData.dietaryRestrictionsInGroup : '',
+        songRequest: state.formData.songRequest,
+        additionalNotes: state.formData.additionalNotes
       };
 
       const updatedGuestInfo = await updateRSVPStatus(updateData);
       onSubmitSuccess(updatedGuestInfo);
     } catch (err) {
-      // TODO: Remove console.error before deploying to production
-      console.error('Error updating RSVP:', err);
-      setStatus({
-        type: 'error',
-        message: 'Hubo un error al guardar tu respuesta. Por favor, intentá de nuevo.'
+      dispatch({
+        type: ACTIONS.SET_STATUS,
+        payload: {
+          type: 'error',
+          message: getErrorMessage(err)
+        }
       });
     } finally {
-      setSubmitting(false);
-      setShowConfirmModal(false);
+      dispatch({ type: ACTIONS.SET_SUBMITTING, payload: false });
     }
   };
 
   const handleDeclineAll = async () => {
-    setDecliningAll(true);
-    setStatus({ type: null, message: null });
+    dispatch({ type: ACTIONS.SET_DECLINING_ALL, payload: true });
+    dispatch({ type: ACTIONS.RESET_STATUS });
 
     try {
       const updateData = {
@@ -184,34 +280,33 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
         mainGuest: { ...guestInfo.mainGuest, attending: false },
         companion: guestInfo.hasCompanion ? { ...guestInfo.companion, attending: false } : null,
         children: guestInfo.hasChildren ? guestInfo.children.map(child => ({ ...child, attending: false })) : [],
-        dietaryRestrictionsInGroup: '',
-        songRequest: '',
-        additionalNotes: ''
+        dietaryRestrictionsInGroup: ''
       };
 
       const updatedGuestInfo = await updateRSVPStatus(updateData);
       onSubmitSuccess(updatedGuestInfo);
     } catch (err) {
-      console.error('Error updating RSVP:', err);
-      setStatus({
-        type: 'error',
-        message: 'Hubo un error al guardar tu respuesta. Por favor, intentá de nuevo.'
+      dispatch({
+        type: ACTIONS.SET_STATUS,
+        payload: {
+          type: 'error',
+          message: getErrorMessage(err)
+        }
       });
     } finally {
-      setDecliningAll(false);
-      setShowDeclineModal(false);
+      dispatch({ type: ACTIONS.SET_DECLINING_ALL, payload: false });
     }
   };
 
   const handleCancelDecline = () => {
-    setShowDeclineModal(false);
-    setStatus({ type: null, message: null });
+    dispatch({ type: ACTIONS.TOGGLE_DECLINE_MODAL, payload: false });
+    dispatch({ type: ACTIONS.RESET_STATUS });
   };
 
   const handleOpenDeclineModal = (e) => {
     e.preventDefault();
-    setShowDeclineModal(true);
-    setStatus({ type: null, message: null });
+    dispatch({ type: ACTIONS.TOGGLE_DECLINE_MODAL, payload: true });
+    dispatch({ type: ACTIONS.RESET_STATUS });
   };
 
   return (
@@ -223,8 +318,8 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
           <label className={styles.guestItem}>
             <input
               type="checkbox"
-              checked={formData.mainGuest?.attending || false}
-              onChange={handleSingleGuestAttendance('mainGuest')}
+              checked={state.formData.mainGuest?.attending || false}
+              onChange={handleAttendanceChange('mainGuest')}
             />
             <span>{guestInfo?.mainGuest.name}</span>
           </label>
@@ -233,8 +328,8 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
             <label className={styles.guestItem}>
               <input
                 type="checkbox"
-                checked={formData.companion?.attending || false}
-                onChange={handleSingleGuestAttendance('companion')}
+                checked={state.formData.companion?.attending || false}
+                onChange={handleAttendanceChange('companion')}
               />
               <span>{guestInfo.companion.name}</span>
             </label>
@@ -244,30 +339,33 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
             <label key={index} className={styles.guestItem}>
               <input
                 type="checkbox"
-                checked={formData.children[index]?.attending || false}
-                onChange={handleChildAttendance(index)}
+                checked={state.formData.children[index]?.attending || false}
+                onChange={handleAttendanceChange('children', index)}
               />
               <span>{child.name}</span>
             </label>
           ))}
         </div>
-
-        <div className={styles.inputGroup}>
-          <label htmlFor="dietary">Restricciones alimentarias:</label>
-          <textarea
-            id="dietary"
-            value={formData.dietaryRestrictionsInGroup}
-            onChange={handleInputChange('dietaryRestrictionsInGroup')}
-            placeholder="Por favor, indicá si alguien tiene alguna restricción alimentaria"
-          />
-        </div>
+        
+        {anyAttending ?
+            <div className={styles.inputGroup}>
+              <label htmlFor="dietary">Restricciones alimentarias:</label>
+              <textarea
+                id="dietary"
+                value={state.formData.dietaryRestrictionsInGroup}
+                onChange={handleInputChange('dietaryRestrictionsInGroup')}
+                placeholder="Por favor, indicá si alguien tiene alguna restricción alimentaria"
+              />
+            </div>
+        : null
+        }
 
         <div className={styles.inputGroup}>
           <label htmlFor="song">¿Qué canción no puede faltar?</label>
           <input
             type="text"
             id="song"
-            value={formData.songRequest}
+            value={state.formData.songRequest}
             onChange={handleInputChange('songRequest')}
             placeholder="¡Ayudanos a armar la playlist!"
           />
@@ -277,7 +375,7 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
           <label htmlFor="notes">Notas adicionales:</label>
           <textarea
             id="notes"
-            value={formData.additionalNotes}
+            value={state.formData.additionalNotes}
             onChange={handleInputChange('additionalNotes')}
             placeholder="¿Hay algo más que quieras contarnos?"
           />
@@ -310,34 +408,34 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
         <Button
           type="button"
           onClick={handleOpenDeclineModal}
-          disabled={submitting || decliningAll}
+          disabled={state.submitting || state.decliningAll}
           className={styles.declineButton}
         >
           No asistirá nadie
         </Button>
       )}
 
-      {status.message && (
-        <p className={`${styles.message} ${styles[status.type]}`}>
-          {status.message}
+      {state.status.message && (
+        <p className={`${styles.message} ${styles[state.status.type]}`}>
+          {state.status.message}
         </p>
       )}
 
       <Modal
-        isOpen={showConfirmModal}
+        isOpen={state.showConfirmModal}
         title="Confirmar asistencia"
-        message={generateSummaryMessage()}
-        confirmText={submitting ? 'Enviando...' : 'Confirmar'}
+        message={summaryMessage}
+        confirmText={state.submitting ? 'Enviando...' : 'Confirmar'}
         cancelText="Volver"
         onConfirm={handleConfirmSubmit}
-        onCancel={() => setShowConfirmModal(false)}
+        onCancel={() => dispatch({ type: ACTIONS.TOGGLE_CONFIRM_MODAL, payload: false })}
       />
 
       <Modal
-        isOpen={showDeclineModal}
+        isOpen={state.showDeclineModal}
         title="Confirmar ausencia"
         message="¿Estás seguro/a que nadie del grupo podrá asistir?"
-        confirmText={decliningAll ? 'Enviando...' : 'Sí, nadie podrá asistir'}
+        confirmText={state.decliningAll ? 'Enviando...' : 'Sí, nadie podrá asistir'}
         cancelText="Cancelar"
         onConfirm={handleDeclineAll}
         onCancel={handleCancelDecline}
@@ -347,26 +445,7 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
 };
 
 AttendanceForm.propTypes = {
-  guestInfo: PropTypes.shape({
-    invitationId: PropTypes.string.isRequired,
-    mainGuest: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      attending: PropTypes.bool
-    }).isRequired,
-    hasCompanion: PropTypes.bool.isRequired,
-    companion: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      attending: PropTypes.bool
-    }),
-    hasChildren: PropTypes.bool.isRequired,
-    children: PropTypes.arrayOf(PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        attending: PropTypes.bool
-    })),
-    dietaryRestrictionsInGroup: PropTypes.string,
-    songRequest: PropTypes.string,
-    additionalNotes: PropTypes.string
-  }).isRequired,
+  guestInfo: GuestInfoShape.isRequired,
   onSubmitSuccess: PropTypes.func.isRequired,
   onGoBack: PropTypes.func.isRequired,
   isModifying: PropTypes.bool

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from './Countdown.module.css';
 import FlipUnitContainer from './FlipUnitContainer/FlipUnitContainer';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 
 const Countdown = () => {
     const weddingDate = new Date(2025, 7, 30, 12, 30);
@@ -36,7 +37,8 @@ const Countdown = () => {
 
     return (
       <section className={styles.countdownContainer}>
-        <div className={styles.countdown}>
+        <ErrorBoundary>
+          <div className={styles.countdown}>
             <FlipUnitContainer
                 unit="days"
                 digit={timeLeft.days}
@@ -57,7 +59,8 @@ const Countdown = () => {
                 digit={timeLeft.seconds}
                 label="Segundos"
             />
-        </div>
+          </div>
+        </ErrorBoundary>
       </section>
     );
 };

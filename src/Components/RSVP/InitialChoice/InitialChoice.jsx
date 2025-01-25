@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { updateRSVPStatus } from '../../../services/services';
+import { GuestInfoShape } from '../propTypes';
 import Button from '../../Button/Button';
 import Modal from '../../Modal/Modal';
 import styles from './InitialChoice.module.css';
@@ -83,26 +84,7 @@ const InitialChoice = ({ guestInfo, onAttend, onDecline }) => {
 };
 
 InitialChoice.propTypes = {
-  guestInfo: PropTypes.shape({
-    invitationId: PropTypes.string.isRequired,
-    mainGuest: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      attending: PropTypes.bool
-    }).isRequired,
-    hasCompanion: PropTypes.bool.isRequired,
-    companion: PropTypes.oneOfType([
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        attending: PropTypes.bool
-      }),
-      PropTypes.oneOf([null])
-    ]),
-    hasChildren: PropTypes.bool.isRequired,
-    children: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      attending: PropTypes.bool
-    }))
-  }).isRequired,
+  guestInfo: GuestInfoShape.isRequired,
   onAttend: PropTypes.func.isRequired,
   onDecline: PropTypes.func.isRequired
 };

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { GuestInfoShape } from '../propTypes';
 import Button from '../../Button/Button';
 import styles from './AttendanceStatus.module.css';
 
@@ -71,25 +72,7 @@ const AttendanceStatus = ({ guestInfo, onModify }) => {
 };
 
 AttendanceStatus.propTypes = {
-  guestInfo: PropTypes.shape({
-    mainGuest: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      attending: PropTypes.bool
-    }).isRequired,
-    companion: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      attending: PropTypes.bool
-    }),
-    children: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        attending: PropTypes.bool
-      })
-    ),
-    dietaryRestrictionsInGroup: PropTypes.string,
-    songRequest: PropTypes.string,
-    additionalNotes: PropTypes.string
-  }).isRequired,
+  guestInfo: GuestInfoShape.isRequired,
   onModify: PropTypes.func.isRequired
 };
 
