@@ -59,6 +59,10 @@
   box-sizing: border-box;
 }
 
+.mapButton {
+  margin: 2rem auto 0 auto;
+}
+
 .clarification {
   font-family: "Cutive", serif;
   font-size: 0.9rem;

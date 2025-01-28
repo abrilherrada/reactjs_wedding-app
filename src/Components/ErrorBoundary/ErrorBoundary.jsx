@@ -32,7 +32,7 @@ class ErrorBoundary extends Component {
           <p>Algo no anduvo como tenía que andar. Apretá el botón y que Dios te ayude.</p>
           <Button
             onClick={() => window.location.reload()}
-            className={styles.button}
+            className={styles.reloadButton}
           >
             Volver a cargar
           </Button>

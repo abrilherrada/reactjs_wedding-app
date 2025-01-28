@@ -4,6 +4,8 @@ import { updateRSVPStatus } from '../../../services/services';
 import { GuestInfoShape } from '../propTypes';
 import Button from '../../Button/Button';
 import Modal from '../../Modal/Modal';
+import WarningIcon from '../../../assets/icons/WarningIcon';
+import CheckIcon from '../../../assets/icons/CheckIcon';
 import styles from './AttendanceForm.module.css';
 
 // Define action types as constants
@@ -113,18 +115,15 @@ const formReducer = (state, action) => {
 // Error handling utility
 const getErrorMessage = (error) => {
   if (error.message?.includes('Network')) {
-    return 'No pudimos conectarnos al servidor. Por favor, verificá tu conexión a internet.';
+    return 'No pudimos conectarnos al servidor. Fijate si tenés datos o si te anda bien el wifi.';
   }
   if (error.response?.status === 404) {
-    return 'No pudimos encontrar tu invitación. Por favor, verificá el link.';
+    return 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por Whatsapp.';
   }
   if (error.response?.status === 400) {
-    return 'Los datos ingresados no son válidos. Por favor, intentá de nuevo.';
+    return 'Los datos ingresados no son válidos. Intentá de nuevo.';
   }
-  if (error.response?.status === 409) {
-    return 'Ya no es posible modificar tu respuesta. Si necesitás hacer cambios, contactanos directamente.';
-  }
-  return 'Hubo un error al guardar tu respuesta. Por favor, intentá de nuevo.';
+  return 'Algo malió sal y tu respuesta no se guardó. Cruzá los dedos y probá de nuevo.';
 };
 
 const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = false }) => {
@@ -200,29 +199,54 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
       });
     }
 
-    let message = '';
-    
-    if (attending.length > 0) {
-      message += 'Asistirán:\n' + attending.join('\n') + '\n\n';
-    }
-    
-    if (notAttending.length > 0) {
-      message += 'No asistirán:\n' + notAttending.join('\n') + '\n\n';
-    }
+    let message = <> {
+      attending.length > 0 ? attending.length === 1 ?
+        <p className={styles.summaryItem}>
+          <span className={styles.itemTitle}>Asistirá:&nbsp;</span>
+          <span className={styles.itemText}>{attending[0]}.</span>
+        </p>
+      :
+        <p className={styles.summaryItem}>
+          <span className={styles.itemTitle}>Asistirán:&nbsp;</span>
+          <span className={styles.itemText}>{attending.join(', ')}.</span>
+        </p>
+      : null}
+      {
+      notAttending.length > 0 ? notAttending.length === 1 ?
+        <p className={styles.summaryItem}>
+          <span className={styles.itemTitle}>No asistirá:&nbsp;</span>
+          <span className={styles.itemText}>{notAttending[0]}.</span>
+        </p>
+      :
+        <p className={styles.summaryItem}>
+          <span className={styles.itemTitle}>No asistirán:&nbsp;</span>
+          <span className={styles.itemText}>{notAttending.join(', ')}.</span>
+        </p>
+      : null}
+      {
+      anyAttending && state.formData.dietaryRestrictionsInGroup &&
+        <p className={styles.summaryItem}>
+          <span className={styles.itemTitle}>Restricciones alimentarias:&nbsp;</span>
+          <span className={styles.itemText}>{state.formData.dietaryRestrictionsInGroup}</span>
+        </p>
+      }
+      {
+      state.formData.songRequest &&
+        <p className={styles.summaryItem}>
+          <span className={styles.itemTitle}>Música sugerida:&nbsp;</span>
+          <span className={styles.itemText}>{state.formData.songRequest}</span>
+        </p>
+      }
+      {
+      state.formData.additionalNotes &&
+        <p className={styles.summaryItem}>
+          <span className={styles.itemTitle}>Notas adicionales:&nbsp;</span>
+          <span className={styles.itemText}>{state.formData.additionalNotes}</span>
+        </p>
+      }
+    </>
 
-    if (anyAttending && state.formData.dietaryRestrictionsInGroup) {
-      message += `Restricciones alimentarias:\n${state.formData.dietaryRestrictionsInGroup}\n\n`;
-    }
-
-    if (state.formData.songRequest) {
-      message += `Canción solicitada:\n${state.formData.songRequest}\n\n`;
-    }
-
-    if (state.formData.additionalNotes) {
-      message += `Notas adicionales:\n${state.formData.additionalNotes}`;
-    }
-
-    return message.trim();
+    return message;
   }, [state.formData, guestInfo.hasCompanion, guestInfo.hasChildren, anyAttending]);
 
   const handleSubmit = async (e) => {
@@ -310,17 +334,27 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
   };
 
   return (
-    <div className={styles.container}>
+    <>
+      {state.status.message && (
+        <p className={`${styles.message} ${styles[state.status.type]}`}>
+          <span className={styles.icon}>
+            {state.status.type === 'error' ? <WarningIcon /> : <CheckIcon />}
+          </span>
+          <span>{state.status.message}</span>
+        </p>
+      )}
+      <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.guestsSection}>
-          <h3>¿Quiénes van a asistir?</h3>
-          
+          <h3> {!guestInfo.hasCompanion && !guestInfo.hasChildren ? "¿Venís?" : "¿Quiénes vienen?"}</h3>
+          <p>{!guestInfo.hasCompanion && !guestInfo.hasChildren ? "Para confirmar tu asistencia, fijate que tu casilla esté marcada." : "Marcá la casilla para cada persona del grupo que vaya a asistir."}</p>          
           <label className={styles.guestItem}>
             <input
               type="checkbox"
               checked={state.formData.mainGuest?.attending || false}
               onChange={handleAttendanceChange('mainGuest')}
             />
+            <div className={styles.checkmark}></div>
             <span>{guestInfo?.mainGuest.name}</span>
           </label>
 
@@ -331,6 +365,7 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
                 checked={state.formData.companion?.attending || false}
                 onChange={handleAttendanceChange('companion')}
               />
+              <div className={styles.checkmark}></div>
               <span>{guestInfo.companion.name}</span>
             </label>
           )}
@@ -342,6 +377,7 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
                 checked={state.formData.children[index]?.attending || false}
                 onChange={handleAttendanceChange('children', index)}
               />
+              <div className={styles.checkmark}></div>
               <span>{child.name}</span>
             </label>
           ))}
@@ -354,7 +390,7 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
                 id="dietary"
                 value={state.formData.dietaryRestrictionsInGroup}
                 onChange={handleInputChange('dietaryRestrictionsInGroup')}
-                placeholder="Por favor, indicá si alguien tiene alguna restricción alimentaria"
+                placeholder={!guestInfo.hasCompanion && !guestInfo.hasChildren ? "Indicanos si tenés alguna restricción alimentaria." : "Indicanos si alguien del grupo tiene alguna restricción alimentaria."}
               />
             </div>
         : null
@@ -362,8 +398,7 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
 
         <div className={styles.inputGroup}>
           <label htmlFor="song">¿Qué canción no puede faltar?</label>
-          <input
-            type="text"
+          <textarea
             id="song"
             value={state.formData.songRequest}
             onChange={handleInputChange('songRequest')}
@@ -377,53 +412,46 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
             id="notes"
             value={state.formData.additionalNotes}
             onChange={handleInputChange('additionalNotes')}
-            placeholder="¿Hay algo más que quieras contarnos?"
+            placeholder="¿Hay algo más que quieras agregar?"
           />
         </div>
 
-        <div className={styles.buttonGroup}>
-          <Button 
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              onGoBack();
-            }}
-            className={styles.backButton}
-          >
-            Volver
-          </Button>
-          <Button 
-            type="submit" 
-            className={styles.submitButton}
-          >
-            Confirmar
-          </Button>
+        <div className={styles.buttonContainer}>
+          <div className={styles.buttonGroup}>
+            <Button 
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                onGoBack();
+              }}
+              >
+              Volver
+            </Button>
+            <Button 
+              type="submit"
+              >
+              Confirmar
+            </Button>
+          </div>
+          {isModifying && 
+            !(guestInfo.mainGuest.attending === false && 
+              (!guestInfo.hasCompanion || guestInfo.companion.attending === false) &&
+              (!guestInfo.hasChildren || guestInfo.children.every(child => child.attending === false))) && (
+                <Button
+                  type="button"
+                  onClick={handleOpenDeclineModal}
+                  disabled={state.submitting || state.decliningAll}
+                  className={styles.declineButton}
+                >
+                  {!guestInfo.hasCompanion && !guestInfo.hasChildren ? "No asistiré" : "No asistiremos"}
+                </Button>
+          )}
         </div>
       </form>
 
-      {isModifying && 
-       !(guestInfo.mainGuest.attending === false && 
-         (!guestInfo.hasCompanion || guestInfo.companion.attending === false) &&
-         (!guestInfo.hasChildren || guestInfo.children.every(child => child.attending === false))) && (
-        <Button
-          type="button"
-          onClick={handleOpenDeclineModal}
-          disabled={state.submitting || state.decliningAll}
-          className={styles.declineButton}
-        >
-          No asistirá nadie
-        </Button>
-      )}
-
-      {state.status.message && (
-        <p className={`${styles.message} ${styles[state.status.type]}`}>
-          {state.status.message}
-        </p>
-      )}
-
       <Modal
         isOpen={state.showConfirmModal}
-        title="Confirmar asistencia"
+        title="Esto es lo que elegiste"
         message={summaryMessage}
         confirmText={state.submitting ? 'Enviando...' : 'Confirmar'}
         cancelText="Volver"
@@ -434,13 +462,14 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
       <Modal
         isOpen={state.showDeclineModal}
         title="Confirmar ausencia"
-        message="¿Estás seguro/a que nadie del grupo podrá asistir?"
-        confirmText={state.decliningAll ? 'Enviando...' : 'Sí, nadie podrá asistir'}
-        cancelText="Cancelar"
+        message="¿Seguro que no vas a poder asistir?"
+        confirmText={state.decliningAll ? 'Enviando...' : 'No asistiré'}
+        cancelText="Volver"
         onConfirm={handleDeclineAll}
         onCancel={handleCancelDecline}
       />
-    </div>
+      </div>
+    </>
   );
 };
 

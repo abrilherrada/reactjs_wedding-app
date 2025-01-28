@@ -74,6 +74,10 @@
   transition: max-height 0.5s ease-in;
 }
 
+.readMoreButton {
+  margin: 1.5rem auto 0 auto;
+}
+
 .arrow {
   transition: transform 0.5s ease;
   color: var(--text);
@@ -95,11 +99,6 @@
 
   .articleText {
     font-size: 1.2rem;
-  }
-
-  .readMoreBtn {
-    font-size: 1.5rem;
-    margin: 1.5rem auto 0 auto;
   }
 }
 

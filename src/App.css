@@ -16,17 +16,28 @@
   /* Background colors */
   --background-body: #f9f7f1;
   --background-container: #ffffff;
+  --background-modal: rgba(0, 0, 0, 0.5);
+  --background-input-checked: #75af75;
+  --background-input-unchecked: #d7d7d7;
+  --background-error: #ffd5d5;
+  --background-success: #d5ffd5;
   
   /* Text Colors */
   --text: #323232;
+  --text-error: #af6464;
+  --text-success: #75af75;
   
   /* Border Colors */
   --border: 2px solid #323232;
   --border-subtle: 0.5px solid rgba(0, 0, 0, 0.1);
+  --border-error: 2px solid #af6464;
+  --border-success: 2px solid #75af75;
   
   /* Box Shadow */
   --shadow-primary: 4px 4px #323232;
   --shadow-hover: 2px 2px #323232;
+  --shadow-error: 4px 4px #af6464;
+  --shadow-success: 4px 4px #75af75;
 }
 
 html {
@@ -36,4 +47,5 @@ html {
 body {
   margin: 0;
   background-color: var(--background-body);
+  line-height: 1.25;
 }

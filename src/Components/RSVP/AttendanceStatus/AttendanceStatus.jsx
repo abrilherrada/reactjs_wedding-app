@@ -8,18 +8,18 @@ const AttendanceStatus = ({ guestInfo, onModify }) => {
   
   const renderGuestStatus = (guest, key) => (
     <div key={key} className={styles.guestItem}>
-      <div className={styles.guestInfo}>
-        <span className={styles.guestName}>{guest.name}</span>
+      <div>
+        <span>{guest.name}</span>
       </div>
-      <span className={`${styles.status} ${styles[guest.attending ? 'attending' : 'notAttending']}`}>
-        {guest.attending ? 'Asistirá' : 'No asistirá'}
+      <span className={`${styles[guest.attending ? 'attending' : 'notAttending']}`}>
+        {guest.attending ? 'asistirá' : 'no asistirá'}
       </span>
     </div>
   );
 
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>Estado actual de la confirmación</h3>
+      <h3 className={styles.title}>Tu respuesta</h3>
       
       <div className={styles.guestList}>
         <div className={styles.guestGroup}>
@@ -30,7 +30,7 @@ const AttendanceStatus = ({ guestInfo, onModify }) => {
         
         {children && children.length > 0 && (
           <div className={styles.guestGroup}>
-            <h4 className={styles.groupTitle}>Menores</h4>
+            <h4 className={styles.groupTitle}>Niños</h4>
             {children.map((child, index) => renderGuestStatus(child, `child-${index}`))}
           </div>
         )}
@@ -40,22 +40,22 @@ const AttendanceStatus = ({ guestInfo, onModify }) => {
         <div className={styles.additionalInfo}>
           {dietaryRestrictionsInGroup && (
             <div className={styles.infoItem}>
-              <strong>Restricciones alimentarias:</strong>
-              <p>{dietaryRestrictionsInGroup}</p>
+              <p className={styles.infoTitle}>Restricciones alimentarias:</p>
+              <p className={styles.infoText}>{dietaryRestrictionsInGroup}</p>
             </div>
           )}
           
           {songRequest && (
             <div className={styles.infoItem}>
-              <strong>Canción solicitada:</strong>
-              <p>{songRequest}</p>
+              <p className={styles.infoTitle}>Música sugerida:</p>
+              <p className={styles.infoText}>{songRequest}</p>
             </div>
           )}
           
           {additionalNotes && (
             <div className={styles.infoItem}>
-              <strong>Notas adicionales:</strong>
-              <p>{additionalNotes}</p>
+              <p className={styles.infoTitle}>Notas adicionales:</p>
+              <p className={styles.infoText}>{additionalNotes}</p>
             </div>
           )}
         </div>

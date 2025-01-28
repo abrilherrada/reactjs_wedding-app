@@ -32,7 +32,7 @@ const InitialChoice = ({ guestInfo, onAttend, onDecline }) => {
       console.error('Error updating RSVP:', err);
       setStatus({
         type: 'error',
-        message: 'Hubo un error al guardar tu respuesta. Por favor, intentá de nuevo.'
+        message: 'Algo malió sal y tu respuesta no se guardó. Cruzá los dedos y probá de nuevo.'
       });
     } finally {
       setSubmitting(false);
@@ -41,24 +41,22 @@ const InitialChoice = ({ guestInfo, onAttend, onDecline }) => {
   };
 
   return (
-    <>
+    <div className={styles.container}>
       <p className={styles.info}>
-        Por favor, confirmá tu asistencia. Podés modificar tu respuesta hasta un mes antes del evento.
+        Confirmá tu asistencia lo antes posible para que podamos encargar las salchichas y los panes 😂. Sí después cambiás de idea, podés modificar tu respuesta hasta el 30 de julio.
       </p>
 
       <div className={styles.buttonGroup}>
         <Button 
           onClick={onAttend}
           disabled={submitting}
-          className={styles.attendButton}
         >
-          Voy a asistir
+          Sí, voy a asistir
         </Button>
 
         <Button 
           onClick={() => setShowModal(true)}
           disabled={submitting}
-          className={styles.declineButton}
         >
           No voy a poder asistir
         </Button>
@@ -73,13 +71,13 @@ const InitialChoice = ({ guestInfo, onAttend, onDecline }) => {
       <Modal
         isOpen={showModal}
         title="Confirmar ausencia"
-        message="¿Estás seguro/a que no vas a poder asistir?"
-        confirmText={submitting ? 'Enviando...' : 'Sí, no voy a poder asistir'}
-        cancelText="Cancelar"
+        message="¿Seguro que no vas a poder asistir?"
+        confirmText={submitting ? 'Enviando...' : 'No asistiré'}
+        cancelText="Volver"
         onConfirm={handleDecline}
         onCancel={() => setShowModal(false)}
       />
-    </>
+    </div>
   );
 };
 

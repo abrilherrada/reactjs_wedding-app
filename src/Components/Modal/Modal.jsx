@@ -17,18 +17,16 @@ const Modal = ({
     <div className={styles.backdrop}>
       <div className={styles.modal}>
         {title && <h2 className={styles.title}>{title}</h2>}
-        {message && <p className={styles.message}>{message}</p>}
+        {message && <div className={styles.message}>{message}</div>}
         
         <div className={styles.actions}>
           <Button 
             onClick={onCancel}
-            className={styles.cancelButton}
           >
             {cancelText}
           </Button>
           <Button 
             onClick={onConfirm}
-            className={styles.confirmButton}
           >
             {confirmText}
           </Button>
@@ -40,7 +38,10 @@ const Modal = ({
 
 Modal.propTypes = {
   title: PropTypes.string,
-  message: PropTypes.string,
+  message: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.element
+  ]),
   onConfirm: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   confirmText: PropTypes.string,

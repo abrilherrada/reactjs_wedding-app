@@ -5,13 +5,15 @@ import InitialChoice from './InitialChoice/InitialChoice';
 import AttendanceStatus from './AttendanceStatus/AttendanceStatus';
 import Spinner from '../Spinner/Spinner';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import WarningIcon from '../../assets/icons/WarningIcon';
+import CheckIcon from '../../assets/icons/CheckIcon';
 import styles from './RSVP.module.css';
 
 const hasAttendanceResponse = (guest) => guest.attending !== null;
 
 const ERROR_MESSAGES = {
-  NO_INVITATION_ID: 'Por favor, usá el link que te enviamos por mail para confirmar tu asistencia.',
-  INVALID_INVITATION: 'No pudimos encontrar tu invitación. Por favor, verificá el link.'
+  NO_INVITATION_ID: 'Para confirmar tu asistencia, usá el enlace que te enviamos por Whatsapp.',
+  INVALID_INVITATION: 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por Whatsapp.'
 };
 
 const getInvitationIdFromUrl = () => {
@@ -129,15 +131,18 @@ const RSVP = () => {
 
     return (
       <>
+        {status.message && (
+          <p className={`${styles.message} ${styles[status.type]}`}>
+            <span className={styles.icon}>
+            {status.type === 'success' ? <CheckIcon /> : null }
+            </span>
+            <span>{status.message}</span>
+          </p>
+        )}
         <AttendanceStatus 
           guestInfo={guestInfo}
           onModify={handleModifyResponse}
         />
-        {status.message && (
-          <p className={`${styles.message} ${styles[status.type]}`}>
-            {status.message}
-          </p>
-        )}
       </>
     );
   }, [
@@ -160,9 +165,18 @@ const RSVP = () => {
   if (!guestInfo) {
     return (
       <div className={styles.container}>
-        <p className={`${styles.message} ${styles[status.type]}`}>
-          {status.message}
-        </p>
+        <header className={styles.title}>
+          <h2>CONFIRMACIÓN&nbsp;</h2>
+          <h2>DE ASISTENCIA</h2>
+        </header>
+        <div className={styles.errorContainer}>
+          <p className={`${styles.message} ${styles[status.type]}`}>
+            <span className={styles.icon}>
+              {status.type === 'error' ? <WarningIcon /> : null}
+            </span>
+            <span>{status.message}</span>
+          </p>
+        </div>
       </div>
     );
   }

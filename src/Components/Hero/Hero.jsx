@@ -41,6 +41,7 @@ const Hero = () => {
 
               <Button 
                 onClick={() => setIsExpanded(!isExpanded)}
+                className={styles.readMoreButton}
               >
                 <span>
                   {isExpanded ? 'Leer menos' : 'Leer más'}
