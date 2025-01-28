@@ -84,7 +84,7 @@ const RSVP = () => {
       type: 'success',
       message: allDeclined 
         ? 'Gracias por avisarnos. ¡Te vamos a extrañar!'
-        : '¡Gracias por confirmar tu asistencia!'
+        : '¡Gracias por confirmar tu asistencia! Nos vemos ahí 🤍'
     });
   }, []);
 

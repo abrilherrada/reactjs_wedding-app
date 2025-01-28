@@ -4,6 +4,7 @@ import Hero from './Components/Hero/Hero';
 import Countdown from './Components/Countdown/Countdown';
 import EventInfo from './Components/EventInfo/EventInfo';
 import RSVP from './Components/RSVP/RSVP';
+import FAQ from './Components/FAQ/FAQ';
 import './App.css';
 
 const App = () => {
@@ -22,7 +23,7 @@ const App = () => {
               <RSVP />
           </div>
           <div id="faq">
-            <div>FAQ Page</div>
+            <FAQ />
           </div>
         </main>
       </div>
