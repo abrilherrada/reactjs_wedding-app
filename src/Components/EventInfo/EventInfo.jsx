@@ -11,13 +11,13 @@ const EventInfo = () => {
   };
 
   return (
-    <div className={styles.eventInfoContainer}>
+    <div className={styles.container}>
       <header className={styles.title}>
         <h2>INFORMACIÓN&nbsp;</h2>
         <h2>DEL EVENTO</h2>
       </header>
       <ErrorBoundary>
-        <div className={styles.container}>
+        <div className={styles.content}>
           <article className={styles.infoSection}>
             <p>
               <span className={styles.infoTitle}>Fecha:&nbsp;</span>
@@ -32,15 +32,14 @@ const EventInfo = () => {
               <span className={styles.infoText}>Estancia El Rosal, Agua de Oro, Córdoba, Argentina</span>
             </p>
           </article>
-          <div className={styles.mapContainer}>
             <iframe
+            className={styles.map}
               src={googleMapsUrl}
               allowFullScreen=""
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               title="Event Location"
             />
-          </div>
           <Button 
             onClick={handleOpenMaps}
             className={styles.mapButton}

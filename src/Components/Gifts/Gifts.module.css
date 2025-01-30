@@ -16,7 +16,7 @@
 }
 
 .title h2 {
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 0.5rem 0;
   line-height: 1;
 }
 
@@ -30,6 +30,7 @@
 .description {
   font-family: "Cutive", serif;
   font-size: 1rem;
+  color: var(--text);
   text-align: justify;
   margin: 1rem 0 0 0;
 }
