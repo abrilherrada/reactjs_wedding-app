@@ -12,8 +12,8 @@ import styles from './RSVP.module.css';
 const hasAttendanceResponse = (guest) => guest.attending !== null;
 
 const ERROR_MESSAGES = {
-  NO_INVITATION_ID: 'Para confirmar tu asistencia, usá el enlace que te enviamos por Whatsapp.',
-  INVALID_INVITATION: 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por Whatsapp.'
+  NO_INVITATION_ID: 'Para confirmar tu asistencia, usá el enlace que te enviamos por WhatsApp.',
+  INVALID_INVITATION: 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por WhatsApp.'
 };
 
 const getInvitationIdFromUrl = () => {

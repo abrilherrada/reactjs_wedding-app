@@ -13,7 +13,7 @@ const Hero = () => {
           <h1 className={styles.headline}>¡EXTRA, EXTRA!</h1>
           <div className={styles.imageContainer}>
             <img 
-              src="/hero.jpg" 
+              src="/images/hero.jpg" 
               alt="Happy couple" 
               className={styles.heroImage}
             />

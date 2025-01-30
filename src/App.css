@@ -26,6 +26,7 @@
   --text: #323232;
   --text-error: #af6464;
   --text-success: #75af75;
+  --text-link: #6464af;
   
   /* Border Colors */
   --border: 2px solid #323232;
@@ -48,4 +49,9 @@ body {
   margin: 0;
   background-color: var(--background-body);
   line-height: 1.25;
+}
+
+a {
+  text-decoration: none;
+  color: var(--text-link);
 }

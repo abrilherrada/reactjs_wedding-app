@@ -118,7 +118,7 @@ const getErrorMessage = (error) => {
     return 'No pudimos conectarnos al servidor. Fijate si tenés datos o si te anda bien el wifi.';
   }
   if (error.response?.status === 404) {
-    return 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por Whatsapp.';
+    return 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por WhatsApp.';
   }
   if (error.response?.status === 400) {
     return 'Los datos ingresados no son válidos. Intentá de nuevo.';
