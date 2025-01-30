@@ -55,3 +55,12 @@ a {
   text-decoration: none;
   color: var(--text-link);
 }
+
+section,
+#info,
+#rsvp,
+#gifts,
+#faq {
+  scroll-margin-top: 6rem;
+  scroll-behavior: smooth;
+}

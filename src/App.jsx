@@ -17,18 +17,18 @@ const App = () => {
         <main>
           <Hero />
           <Countdown />
-          <div id="info">
+          <section id="info">
             <EventInfo />
-          </div>
-          <div id="rsvp">
+          </section>
+          <section id="rsvp">
             <RSVP />
-          </div>
-          <div id="gifts">
+          </section>
+          <section id="gifts">
             <Gifts />
-          </div>
-          <div id="faq">
+          </section>
+          <section id="faq">
             <FAQ />
-          </div>
+          </section>
         </main>
       </div>
     </Router>

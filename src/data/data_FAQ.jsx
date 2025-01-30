@@ -3,7 +3,7 @@ const data = [
     question: '¿Cómo confirmo si voy o no voy?',
     answer: (
       <p>
-        Facilísimo: andá a la sección <strong>Confirmar asistencia</strong> de esta página y seguí los pasos hasta que te aparezca un mensaje de confirmación verde. Te pedimos que nos avises lo antes posible, ya sea que vengas o no, para poder organizarnos con tiempo. Y no te preocupes si cambiás de opinión más adelante; podés modificar tu respuesta hasta el <strong>30 de julio de 2025</strong>.
+        Facilísimo: andá a la sección <a href="#rsvp">Confirmación de asistencia</a> de esta página y seguí los pasos hasta que te aparezca un mensaje de confirmación verde. Te pedimos que nos avises lo antes posible, ya sea que vengas o no, para poder organizarnos con tiempo. Y no te preocupes si cambiás de opinión más adelante; podés modificar tu respuesta hasta el <strong>30 de julio de 2025</strong>.
       </p>
     )
   },
@@ -11,7 +11,7 @@ const data = [
     question: '¿Qué hago si al final no puedo asistir?',
     answer: (
       <p>
-        ¡No hay drama! Si ya confirmaste que venías y después no podés, solo tenés que volver a la sección <strong>Confirmar asistencia</strong> y cambiar tu respuesta. Eso sí, avisanos lo antes posible para ajustar los planes.
+        ¡No hay drama! Si ya confirmaste que venías y después no podés, solo tenés que volver a la sección <a href="#rsvp">Confirmación de asistencia</a> y cambiar tu respuesta. Eso sí, avisanos lo antes posible para ajustar los planes.
       </p>
     )
   },
@@ -57,7 +57,7 @@ const data = [
     question: '¿Qué hago si hay alimentos que no puedo comer?',
     answer: (
       <p>
-        Si tenés alguna restricción alimentaria o seguís una dieta especial (por ejemplo, una dieta vegana), te pedimos que nos lo aclares en el campo <strong>Restricciones alimentarias</strong> del formulario de asistencia que se encuentra en la sección <strong>Confirmar asistencia</strong>, así te gestionamos un plato que se adapte a tus necesidades.
+        Si tenés alguna restricción alimentaria o seguís una dieta especial (por ejemplo, una dieta vegana), te pedimos que nos lo aclares en el campo <strong>Restricciones alimentarias</strong> del formulario de asistencia que se encuentra en la sección <a href="#rsvp">Confirmación de asistencia</a>, así te gestionamos un plato que se adapte a tus necesidades.
       </p>
     )
   },
@@ -81,7 +81,7 @@ const data = [
     question: '¿Puedo llevar un acompañante?',
     answer: (
       <p>
-        Aunque nos encantaría invitar a todo el mundo, nuestro presupuesto tiene un límite. Por eso, <strong>solo pueden venir las personas indicadas en tu invitación</strong>. Podés fijarte quiénes están incluidos en tu grupo en el mensaje que te enviamos por WhatsApp (con el enlace a esta página) y en el formulario de asistencia de la sección <strong>Confirmar asistencia</strong>.
+        Aunque nos encantaría invitar a todo el mundo, nuestro presupuesto tiene un límite. Por eso, <strong>solo pueden venir las personas indicadas en tu invitación</strong>. Podés fijarte quiénes están incluidos en tu grupo en el mensaje que te enviamos por WhatsApp (con el enlace a esta página) y en el formulario de asistencia de la sección <a href="#rsvp">Confirmación de asistencia</a>.
       </p>
     )
   },
@@ -134,7 +134,7 @@ const data = [
     question: '¿Tengo que llevar un regalo?',
     answer: (
       <p>
-        El mejor regalo es que vengas y compartas este día con nosotros. Pero, si querés hacernos un mimo extra, podés ayudarnos con nuestra luna de miel (¡nos vamos a Japón!). Si querés colaborar, en la sección <strong>Regalos</strong> de esta página vas a encontrar varias opciones.
+        El mejor regalo es que vengas y compartas este día con nosotros. Pero, si querés hacernos un mimo extra, podés ayudarnos con nuestra luna de miel (¡nos vamos a Japón!). Si querés colaborar, en la sección <a href="#gifts">Regalos</a> de esta página vas a encontrar varias opciones.
       </p>
     )
   },
@@ -236,7 +236,7 @@ const data = [
     question: '¿Cómo obtengo la ubicación del salón?',
     answer: (
       <p>
-        La ubicación exacta está en la sección <strong>Información del evento</strong> de esta página. ¡Usá ese enlace, porque Google también muestra otro lugar con el mismo nombre que está a 20 minutos del salón!
+        La ubicación exacta está en la sección <a href="#info">Información del evento</a> de esta página. ¡Usá ese enlace, porque Google también muestra otro lugar con el mismo nombre que está a 20 minutos del salón!
       </p>
     )
   },

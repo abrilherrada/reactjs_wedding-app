@@ -27,16 +27,19 @@ const Navbar = () => {
 
         <div className={`${styles.navbarMenu} ${isOpen ? styles.active : ''}`}>
           <a href="#" className={styles.navItem} onClick={toggleMenu}>
-            Home
+            Inicio
           </a>
           <a href="#info" className={styles.navItem} onClick={toggleMenu}>
-            Info
+            Evento
           </a>
           <a href="#rsvp" className={styles.navItem} onClick={toggleMenu}>
-            RSVP
+            Asistencia
+          </a>
+          <a href="#gifts" className={styles.navItem} onClick={toggleMenu}>
+            Regalos
           </a>
           <a href="#faq" className={styles.navItem} onClick={toggleMenu}>
-            FAQ
+            Preguntas
           </a>
         </div>
       </div>

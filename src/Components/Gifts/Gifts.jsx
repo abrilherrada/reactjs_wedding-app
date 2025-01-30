@@ -10,7 +10,7 @@ const Gifts = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <section className={styles.container}>
+    <div className={styles.container}>
       <header className={styles.title}>
         <h2>REGALOS</h2>
       </header>
@@ -53,7 +53,7 @@ const Gifts = () => {
           </Button>
         </div>
       </ErrorBoundary>
-    </section>
+    </div>
   )
 }
 

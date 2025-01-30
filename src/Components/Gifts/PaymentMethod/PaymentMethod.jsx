@@ -13,18 +13,18 @@ const PaymentMethod = () => {
             <div className={styles.options}>
               <div className={styles.option}>
                 <h5>En pesos</h5>
-                <ul>
-                  <li>CBU: 0123456789012345678901</li>
-                  <li>Alias: ABRIL.HERRADA</li>
-                  <li>Titular: Abril Herrada Galvagni</li>
+                <ul className={styles.list}>
+                  <li className={styles.item}>CBU: 0123456789012345678901</li>
+                  <li className={styles.item}>Alias: ABRIL.HERRADA</li>
+                  <li className={styles.item}>Titular: Abril Herrada Galvagni</li>
                 </ul>
               </div>
               <div className={styles.option}>
                 <h5>En dólares</h5>
-                <ul>
-                  <li>CBU: 0123456789012345678901</li>
-                  <li>Alias: ABRIL.HERRADA</li>
-                  <li>Titular: Abril Herrada Galvagni</li>
+                <ul className={styles.list}>
+                  <li className={styles.item}>CBU: 0123456789012345678901</li>
+                  <li className={styles.item}>Alias: ABRIL.HERRADA</li>
+                  <li className={styles.item}>Titular: Abril Herrada Galvagni</li>
                 </ul>
               </div>
             </div>
@@ -34,16 +34,16 @@ const PaymentMethod = () => {
             <div className={styles.options}>
               <div className={styles.option}>
                 <h5>Cuenta de USA</h5>
-                <ul>
-                  <li>Número de cuenta: 012345678901</li>
-                  <li>Numero de ruta: 012345678</li>
-                  <li>Tipo de cuenta: Cuenta de cheques</li>
+                <ul className={styles.list}>
+                  <li className={styles.item}>Número de cuenta: 012345678901</li>
+                  <li className={styles.item}>Numero de ruta: 012345678</li>
+                  <li className={styles.item}>Tipo de cuenta: Cuenta de cheques</li>
                 </ul>
               </div>
               <div className={styles.option}>
                 <h5>PayPal</h5>
-                <ul>
-                  <li>
+                <ul className={styles.list}>
+                  <li className={styles.item}>
                     <a 
                       href="https://www.paypal.me/macarlupu"
                       target="_blank"
@@ -64,14 +64,14 @@ const PaymentMethod = () => {
         <div className={styles.options}>
           <div className={styles.option}>
             <h5>En el evento</h5>
-            <ul>
-              <li>Si te queda más cómodo, podés darnos tu regalo el día del evento.</li>
+            <ul className={styles.list}>
+              <li className={styles.item}>Si te queda más cómodo, podés darnos tu regalo el día del evento.</li>
             </ul>
           </div>
           <div className={styles.option}>
             <h5>En otro momento</h5>
-            <ul>
-              <li>Si la opción anterior no te sirve, hablanos y nos organizamos.</li>
+            <ul className={styles.list}>
+              <li className={styles.item}>Si la opción anterior no te sirve, hablanos y nos organizamos.</li>
             </ul>
           </div>
         </div>
@@ -84,14 +84,14 @@ const PaymentMethod = () => {
           <div className={styles.options}>
             <div className={styles.option}>
               <h5>Tron</h5>
-              <ul>
-                <li>TY6eRquTwFP1Bjo22RrSCT6sS2FhU5qvpZ</li>
+              <ul className={styles.list}>
+                <li className={styles.item}>TY6eRquTwFP1Bjo22RrSCT6sS2FhU5qvpZ</li>
               </ul>
             </div>
             <div className={styles.option}>
               <h5>BNB Smart Chain</h5>
-              <ul>
-                <li>0xca81396f30794c51ddB327039590e20EC1fe9e06</li>
+              <ul className={styles.list}>
+                <li className={styles.item}>0xca81396f30794c51ddB327039590e20EC1fe9e06</li>
               </ul>
             </div>
           </div>
@@ -104,8 +104,8 @@ const PaymentMethod = () => {
           <div className={styles.option}>
             <h4>En pesos</h4>
             <h5>Mercadopago</h5>
-            <ul>
-              <li>
+            <ul className={styles.list}>
+              <li className={styles.item}>
                 <a
                   href="https://www.link.mercadopago.com.ar/macarlupu"
                   target="_blank"
@@ -119,8 +119,8 @@ const PaymentMethod = () => {
           <div className={styles.option}>
             <h4>En dólares</h4>
             <h5>PayPal</h5>
-            <ul>
-              <li>
+            <ul className={styles.list}>
+              <li className={styles.item}>
                 <a 
                   href="https://www.paypal.me/macarlupu"
                   target="_blank"

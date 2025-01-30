@@ -11,7 +11,7 @@ const EventInfo = () => {
   };
 
   return (
-    <section className={styles.eventInfoContainer}>
+    <div className={styles.eventInfoContainer}>
       <header className={styles.title}>
         <h2>INFORMACIÓN&nbsp;</h2>
         <h2>DEL EVENTO</h2>
@@ -50,7 +50,7 @@ const EventInfo = () => {
           <p className={styles.clarification}>(Te recomendamos que uses esta ubicación, ya que, si buscás el salón por nombre en Google Maps, hay más de un resultado, y podés terminar demorando más de lo previsto en llegar).</p>
         </div>
       </ErrorBoundary>
-    </section>
+    </div>
   );
 };
 

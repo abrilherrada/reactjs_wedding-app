@@ -43,7 +43,7 @@ const InitialChoice = ({ guestInfo, onAttend, onDecline }) => {
   return (
     <div className={styles.container}>
       <p className={styles.info}>
-        Confirmá tu asistencia lo antes posible para que podamos encargar las salchichas y los panes 😂. Sí después cambiás de idea, podés modificar tu respuesta hasta el 30 de julio.
+        Confirmá tu asistencia lo antes posible para que podamos encargar las salchichas y los panes 😂. Si después cambiás de idea, podés modificar tu respuesta hasta el 30 de julio.
       </p>
 
       <div className={styles.buttonGroup}>
