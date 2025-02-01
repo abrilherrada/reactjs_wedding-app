@@ -1,0 +1,120 @@
+.container {
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-family: "Staatliches", serif;
+  font-size: 2rem;
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.title h2 {
+  margin: 0;
+  line-height: 1;
+}
+
+.content {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.paragraph {
+  font-family: "Cutive", serif;
+  font-size: 1rem;
+  color: var(--text);
+  text-align: justify;
+  margin: 1rem 0 0 0;
+}
+
+.card {
+  border-radius: 5px;
+  border: var(--border);
+  background: var(--background-container);
+  box-shadow: var(--shadow-primary);
+  padding: 1rem;
+  margin: 0.5rem;
+}
+
+.expandableContent {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.expanded {
+  max-height: 5000px;
+  transition: max-height 0.5s ease-in;
+}
+
+.list {
+  padding: 0 0 0 2rem;
+  list-style-type: none;
+  margin: 0;
+  text-align: justify;
+}
+
+.list li {
+  padding: 0.5rem 0;
+}
+
+.list li::marker {
+  content: "🖤  ";
+  font-size: 0.9rem;
+}
+
+.listItemTitle {
+  font-family: "Staatliches", serif;
+  font-size: 1.25rem;
+  color: var(--text);
+}
+
+.listItemText {
+  font-family: "Cutive", serif;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.bookButton {
+  margin: 1rem auto 0.25rem auto;
+}
+
+.readMoreButton {
+  margin: 1rem auto 0 auto;
+  font-size: 1.25rem;
+}
+
+.arrow {
+  transition: transform 0.5s ease;
+  color: var(--text);
+}
+
+.arrowUp {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 379px) {
+  .container {
+      padding: 1rem 0.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+      padding: 1.5rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+      padding: 2rem;
+  }
+}

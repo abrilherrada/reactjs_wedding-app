@@ -5,6 +5,7 @@ import Countdown from './Components/Countdown/Countdown';
 import EventInfo from './Components/EventInfo/EventInfo';
 import RSVP from './Components/RSVP/RSVP';
 import Lodging from './Components/Lodging/Lodging';
+import Transportation from './Components/Transportation/Transportation';
 import Gifts from './Components/Gifts/Gifts';
 import FAQ from './Components/FAQ/FAQ';
 import './App.css';
@@ -25,6 +26,7 @@ const App = () => {
             <RSVP />
           </section>
           <Lodging />
+          <Transportation />
           <section id="gifts">
             <Gifts />
           </section>
