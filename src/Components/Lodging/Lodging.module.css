@@ -48,8 +48,19 @@
   padding: 1rem 0 0.5rem 0;
 }
 
+.expandableContent {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.expanded {
+  max-height: 5000px;
+  transition: max-height 0.5s ease-in;
+}
+
 .bookButton {
-  margin: 1.5rem auto 0 auto;
+  margin: 1.5rem auto 0.25rem auto;
 }
 
 .list {
@@ -70,6 +81,20 @@
 .link {
   font-family: "Cutive", serif;
   font-size: 0.9rem;
+}
+
+.readMoreButton {
+  margin: 1rem auto 0 auto;
+  font-size: 1.25rem;
+}
+
+.arrow {
+  transition: transform 0.5s ease;
+  color: var(--text);
+}
+
+.arrowUp {
+  transform: rotate(180deg);
 }
 
 @media (max-width: 379px) {
