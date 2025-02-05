@@ -25,14 +25,14 @@ const App = () => {
           <section id="rsvp">
             <RSVP />
           </section>
+          <section id="gifts">
+            <Gifts />
+          </section>
           <section id="lodging">
             <Lodging />
           </section>
           <section id="transportation">
             <Transportation />
-          </section>
-          <section id="gifts">
-            <Gifts />
           </section>
           <section id="faq">
             <FAQ />
