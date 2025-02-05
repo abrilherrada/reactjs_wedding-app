@@ -8,7 +8,7 @@ const Lodging = () => {
   const [isExpanded3, setIsExpanded3] = useState(false);
 
   return (
-    <section className={styles.container}>
+    <div className={styles.container}>
       <header className={styles.title}>
         <h2>OPCIONES&nbsp;</h2>
         <h2>DE ALOJAMIENTO</h2>
@@ -352,7 +352,7 @@ const Lodging = () => {
         </article>
         <p className={styles.paragraph}>Obvio que estas opciones son solo algunas de las que hay disponibles y las proponemos como un punto de partida para orientarte. ¡Podés seguir chusmeando y por ahí encontrás algo que te guste más!</p>
       </div>
-    </section>
+    </div>
   )
 }
 

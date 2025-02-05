@@ -25,8 +25,12 @@ const App = () => {
           <section id="rsvp">
             <RSVP />
           </section>
-          <Lodging />
-          <Transportation />
+          <section id="lodging">
+            <Lodging />
+          </section>
+          <section id="transportation">
+            <Transportation />
+          </section>
           <section id="gifts">
             <Gifts />
           </section>

@@ -6,7 +6,7 @@ const Transportation = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <section className={styles.container}>
+    <div className={styles.container}>
       <header className={styles.title}>
         <h2>OPCIONES&nbsp;</h2>
         <h2>DE TRASLADO</h2>
@@ -69,7 +69,7 @@ const Transportation = () => {
               </Button>
         </article>
       </div>
-  </section>
+  </div>
   )
 }
 
