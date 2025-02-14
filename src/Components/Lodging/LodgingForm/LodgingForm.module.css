@@ -1,0 +1,206 @@
+.availabilityInfo {
+  font-family: "Staatliches", serif;
+  text-align: right;
+  font-size: 1.25rem;
+  color: var(--text);
+  margin: 1rem 0;
+}
+
+.availabilityText {
+  border-radius: 5px;
+  border: var(--border-success);
+  background-color: var(--background-container);
+  color: var(--background-input-checked);
+  padding: 0.25rem;
+}
+
+.guestList {
+  font-family: "Cutive", serif;
+  font-size: 1rem;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.guestList .guestListTitle {
+  padding: 0;
+  text-align: left;
+}
+
+.guestList p {
+  margin: 0;
+}
+
+.guestItem {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.guestItem input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  opacity: 0;
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  top: 0;
+  left: 0;
+  border-radius: 5px;
+  border: var(--border);
+  box-shadow: var(--shadow-primary);
+  background-color: var(--background-input-unchecked);
+  transition: all 0.3s;
+}
+
+.guestItem input:checked ~ .checkmark {
+  background-color: var(--background-input-checked);
+}
+
+.checkmark:after {
+  content: "";
+  width: 5px;
+  height: 10px;
+  position: absolute;
+  top: 2px;
+  left: 7px;
+  display: none;
+  border: solid var(--background-container);
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+}
+
+.guestItem input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.guestItem span {
+  margin-top: 0.5rem;
+}
+
+.notAttendingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.notAttendingList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.notAttending {
+  opacity: 0.7;
+
+}
+
+.notAttendingIcon {
+  text-align: center;
+  align-self: center;
+}
+
+.notAttendingMessage {
+  font-size: 0.9em;
+  opacity: 0.7;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 1.5rem 0 0 0;
+}
+
+.confirmModalList {
+  list-style-type: none;
+}
+
+.confirmModalList li {
+  padding: 0.5rem;
+}
+
+.confirmModalList li::marker {
+  content: "🖤  ";
+  font-size: 0.9rem;
+}
+
+.messageContainer {
+  font-family: "Cutive", serif;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  margin: 1rem 0 1.5rem 0;
+  gap: 1rem;
+  border-radius: 5px;
+}
+
+.messageContainer p {
+  text-align: justify;
+  color: var(--text);
+  margin: 0;
+}
+
+.message {
+  display: flex;
+  justify-content: center;
+  font-size: 0.9rem;
+  gap: 1rem;
+}
+
+.error {
+  border: var(--border-error);
+  box-shadow: var(--shadow-error);
+  color: var(--text-error);
+  background-color: var(--background-error);
+}
+
+.error p {
+  color: var(--text-error);
+}
+
+.success {
+  border: var(--border-success);
+  box-shadow: var(--shadow-success);
+  color: var(--text-success);
+  background-color: var(--background-success);
+}
+
+.message span {
+  margin: auto 0;
+}
+
+.messageActions {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 1rem 0;
+}
+
+.rsvpButton {
+  margin: 0 auto;
+}
+
+@media (max-width: 400px) {
+  .actions {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 480px) {
+  .notAttendingContainer {
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+  }
+}

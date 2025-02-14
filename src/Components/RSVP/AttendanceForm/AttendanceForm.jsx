@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { updateRSVPStatus } from '../../../services/services';
+import { updateRSVPStatus } from '../../../services/rsvp_services';
 import { GuestInfoShape } from '../propTypes';
 import Button from '../../Button/Button';
 import Modal from '../../Modal/Modal';

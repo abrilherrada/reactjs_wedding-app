@@ -5,6 +5,36 @@
   align-items: center;
 }
 
+.message {
+  font-family: "Cutive", serif;
+  font-size: 0.9rem;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0.5rem 0.5rem 0 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.error {
+  border: var(--border-error);
+  box-shadow: var(--shadow-error);
+  color: var(--text-error);
+  background-color: var(--background-error);
+}
+
+.success {
+  border: var(--border-success);
+  box-shadow: var(--shadow-success);
+  color: var(--text-success);
+  background-color: var(--background-success);
+}
+
+.message span {
+  margin: auto 0;
+}
+
 .title {
   font-family: "Staatliches", serif;
   font-size: 2rem;
@@ -40,7 +70,7 @@
   border: var(--border);
   background: var(--background-container);
   box-shadow: var(--shadow-primary);
-  padding: 1rem;
+  padding: 1.5rem;
   margin: 0.5rem;
 }
 
@@ -61,6 +91,10 @@
 
 .bookButton {
   margin: 1.5rem auto 0.25rem auto;
+}
+
+.retryButton {
+  margin: 1.5rem auto 0 auto;
 }
 
 .list {
@@ -101,11 +135,19 @@
   .container {
       padding: 1rem 0.5rem;
   }
+
+  .card {
+    padding: 1rem;
+  }
 }
 
 @media (min-width: 768px) {
   .container {
       padding: 1.5rem 2rem;
+  }
+
+  .card {
+    padding: 2rem;
   }
 }
 

@@ -35,12 +35,21 @@
   padding: 1rem 0 0 0;
 }
 
+.attending, .notAttending {
+  font-family: "Staatliches", serif;
+  font-size: 1.25rem;
+  border-radius: 5px;
+  padding: 0.25rem;
+}
+
 .attending {
   color: var(--text-success);
+  border: var(--border-success);
 }
 
 .notAttending {
   color: var(--text-error);
+  border: var(--border-error);
 }
 
 .additionalInfo {

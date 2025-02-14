@@ -4,22 +4,26 @@ import styles from './Button.module.css';
 const Button = ({ 
   children, 
   onClick = () => {}, 
-  className = '' 
+  className = '',
+  as: Component = 'button',
+  ...props
 }) => {
   return (
-    <button 
+    <Component 
       className={`${styles.button} ${className}`}
       onClick={onClick}
+      {...props}
     >
       {children}
-    </button>
+    </Component>
   );
 };
 
 Button.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func,
-  className: PropTypes.string
+  className: PropTypes.string,
+  as: PropTypes.elementType
 };
 
 export default Button;
