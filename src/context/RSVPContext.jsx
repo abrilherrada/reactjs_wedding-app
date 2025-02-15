@@ -5,22 +5,21 @@ import { RSVPContext } from './RSVPContext.js';
 
 export const RSVPProvider = ({ children }) => {
   const [guestInfo, setGuestInfo] = useState(null);
-  const [status, setStatus] = useState({ type: null, message: null });
+  const [status, setStatus] = useState({ type: null });
   const [loading, setLoading] = useState(true);
 
   const fetchRSVPInfo = useCallback(async (invitationId) => {
     setLoading(true);
-    setStatus({ type: null, message: null });
+    setStatus({ type: null });
     
     try {
       const data = await getRSVPInfo(invitationId);
       setGuestInfo(data);
       return data;
     } catch (error) {
-      console.error('Error fetching RSVP info:', error);
       setStatus({
         type: 'error',
-        message: 'No pudimos cargar tu información. Intentá de nuevo.'
+        status: error.status
       });
       return null;
     } finally {
@@ -34,6 +33,7 @@ export const RSVPProvider = ({ children }) => {
     status,
     setStatus,
     loading,
+    setLoading,
     fetchRSVPInfo
   };
 

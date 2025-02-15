@@ -9,16 +9,12 @@ const API_BASE_URL = 'https://enpq096kji.execute-api.us-east-1.amazonaws.com/def
 export const getRSVPInfo = async (invitationId) => {
   try {
     const response = await fetch(`${API_BASE_URL}?invitationId=${invitationId}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Invitation not found');
-      }
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    if (!response.ok) throw response;
     return await response.json();
   } catch (error) {
-    console.error('Error fetching RSVP info:', error);
-    throw error;
+    const customError = new Error();
+    customError.status = error.status || 500;
+    throw customError;
   }
 };
 
@@ -49,15 +45,11 @@ export const updateRSVPStatus = async (updateData) => {
       body: JSON.stringify(updateData)
     });
     
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Invitation not found');
-      }
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    if (!response.ok) throw response;
     return await response.json();
   } catch (error) {
-    console.error('Error updating RSVP:', error);
-    throw error;
+    const customError = new Error();
+    customError.status = error.status || 500;
+    throw customError;
   }
 };

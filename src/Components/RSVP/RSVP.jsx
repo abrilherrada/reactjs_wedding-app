@@ -13,7 +13,8 @@ const hasAttendanceResponse = (guest) => guest.attending !== null;
 
 const ERROR_MESSAGES = {
   NO_INVITATION_ID: 'Para confirmar tu asistencia, usá el enlace que te enviamos por WhatsApp.',
-  INVALID_INVITATION: 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por WhatsApp.'
+  INVALID_INVITATION: 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por WhatsApp.',
+  UNKNOWN_ERROR: 'No pudimos cargar tu información. Intentá de nuevo.'
 };
 
 const getInvitationIdFromUrl = () => {
@@ -21,8 +22,16 @@ const getInvitationIdFromUrl = () => {
   return params.get('invitationId');
 };
 
+const getErrorMessage = (status) => {
+  if (!status?.type) return null;
+  if (status.status === 404) return ERROR_MESSAGES.INVALID_INVITATION;
+  if (!status.status) return ERROR_MESSAGES.NO_INVITATION_ID;
+  if (status.status >= 500) return ERROR_MESSAGES.UNKNOWN_ERROR;
+  return ERROR_MESSAGES.UNKNOWN_ERROR;
+};
+
 const RSVP = () => {
-  const { guestInfo, setGuestInfo, status, loading: initialLoading, fetchRSVPInfo, setStatus } = useRSVP();
+  const { guestInfo, setGuestInfo, status, loading: initialLoading, fetchRSVPInfo, setStatus, setLoading } = useRSVP();
   const [showAttendanceForm, setShowAttendanceForm] = useState(false);
 
   const hasResponse = useMemo(() => {
@@ -43,13 +52,14 @@ const RSVP = () => {
     if (!invitationId) {
       setStatus({
         type: 'error',
-        message: ERROR_MESSAGES.NO_INVITATION_ID
+        status: null
       });
+      setLoading(false);
       return;
     }
 
     fetchRSVPInfo(invitationId);
-  }, [fetchRSVPInfo, setStatus]);
+  }, [fetchRSVPInfo, setStatus, setLoading]);
 
   const handleFormSuccess = useCallback((updatedData) => {
     // Update the state with the data returned from the server
@@ -155,7 +165,7 @@ const RSVP = () => {
             <span className={styles.icon}>
               {status.type === 'error' ? <WarningIcon /> : null}
             </span>
-            <span>{status.message}</span>
+            <span>{getErrorMessage(status)}</span>
           </p>
         </div>
       </div>
