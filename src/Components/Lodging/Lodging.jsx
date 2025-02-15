@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getLodgingReservation } from '../../services/lodging_services';
+import { useRSVP } from '../../context/useRSVP';
 import LodgingForm from './LodgingForm/LodgingForm';
 import LodgingStatus from './LodgingStatus/LodgingStatus';
 import Button from '../Button/Button';
@@ -15,6 +16,7 @@ const ERROR_MESSAGES = {
 };
 
 const Lodging = () => {
+  const { guestInfo } = useRSVP();
   const [expandedSections, setExpandedSections] = useState({
     venue: false,
     nearby: false,
@@ -49,7 +51,7 @@ const Lodging = () => {
 
   useEffect(() => {
     fetchReservation();
-  }, [fetchReservation]);
+  }, [fetchReservation, guestInfo]);
 
   const handleFormVisibility = (visible) => {
     setShowForm(visible);

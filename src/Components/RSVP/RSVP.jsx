@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { getRSVPInfo } from '../../services/rsvp_services';
+import { useRSVP } from '../../context/useRSVP';
 import AttendanceForm from './AttendanceForm/AttendanceForm';
 import InitialChoice from './InitialChoice/InitialChoice';
 import AttendanceStatus from './AttendanceStatus/AttendanceStatus';
@@ -22,10 +22,8 @@ const getInvitationIdFromUrl = () => {
 };
 
 const RSVP = () => {
-  const [guestInfo, setGuestInfo] = useState(null);
+  const { guestInfo, setGuestInfo, status, loading: initialLoading, fetchRSVPInfo, setStatus } = useRSVP();
   const [showAttendanceForm, setShowAttendanceForm] = useState(false);
-  const [status, setStatus] = useState({ type: null, message: null });
-  const [initialLoading, setInitialLoading] = useState(true);
 
   const hasResponse = useMemo(() => {
     if (!guestInfo) return false;
@@ -47,28 +45,11 @@ const RSVP = () => {
         type: 'error',
         message: ERROR_MESSAGES.NO_INVITATION_ID
       });
-      setInitialLoading(false);
       return;
     }
 
-    const fetchGuestInfo = async () => {
-      try {
-        const data = await getRSVPInfo(invitationId);
-        setGuestInfo(data);
-      } catch (err) {
-        // TODO: Remove console.error before deploying to production
-        console.error('Error updating RSVP:', err);
-        setStatus({
-          type: 'error',
-          message: ERROR_MESSAGES.INVALID_INVITATION
-        });
-      } finally {
-        setInitialLoading(false);
-      }
-    };
-
-    fetchGuestInfo();
-  }, []);
+    fetchRSVPInfo(invitationId);
+  }, [fetchRSVPInfo, setStatus]);
 
   const handleFormSuccess = useCallback((updatedData) => {
     // Update the state with the data returned from the server
@@ -86,7 +67,7 @@ const RSVP = () => {
         ? 'Gracias por avisarnos. ¡Te vamos a extrañar!'
         : '¡Gracias por confirmar tu asistencia! Nos vemos ahí 🤍'
     });
-  }, []);
+  }, [setGuestInfo, setStatus]);
 
   const handleDeclineSuccess = useCallback((updatedData) => {
     setGuestInfo(updatedData);
@@ -95,17 +76,17 @@ const RSVP = () => {
       type: 'success',
       message: 'Gracias por avisarnos. ¡Te vamos a extrañar!'
     });
-  }, []);
+  }, [setGuestInfo, setStatus]);
 
   const handleModifyResponse = useCallback(() => {
     setShowAttendanceForm(true);
     setStatus({ type: null, message: null });
-  }, []);
+  }, [setStatus]);
 
   const handleGoBack = useCallback(() => {
     setShowAttendanceForm(false);
     setStatus({ type: null, message: null });
-  }, []);
+  }, [setStatus]);
 
   const renderContent = useCallback(() => {
     if (showAttendanceForm) {

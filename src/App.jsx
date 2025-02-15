@@ -1,4 +1,5 @@
 import { BrowserRouter as Router } from 'react-router-dom';
+import { RSVPProvider } from './context/RSVPContext.jsx';
 import Navbar from './Components/Navbar/Navbar';
 import Hero from './Components/Hero/Hero';
 import Countdown from './Components/Countdown/Countdown';
@@ -14,31 +15,33 @@ const App = () => {
 
   return (
     <Router>
-      <div className="App">
-        <Navbar />
-        <main>
-          <Hero />
-          <Countdown />
-          <section id="info">
-            <EventInfo />
-          </section>
-          <section id="rsvp">
-            <RSVP />
-          </section>
-          <section id="gifts">
-            <Gifts />
-          </section>
-          <section id="lodging">
-            <Lodging />
-          </section>
-          <section id="transportation">
-            <Transportation />
-          </section>
-          <section id="faq">
-            <FAQ />
-          </section>
-        </main>
-      </div>
+      <RSVPProvider>
+        <div className="App">
+          <Navbar />
+          <main>
+            <Hero />
+            <Countdown />
+            <section id="info">
+              <EventInfo />
+            </section>
+            <section id="rsvp">
+              <RSVP />
+            </section>
+            <section id="gifts">
+              <Gifts />
+            </section>
+            <section id="lodging">
+              <Lodging />
+            </section>
+            <section id="transportation">
+              <Transportation />
+            </section>
+            <section id="faq">
+              <FAQ />
+            </section>
+          </main>
+        </div>
+      </RSVPProvider>
     </Router>
   )
 }
