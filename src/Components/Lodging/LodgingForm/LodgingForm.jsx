@@ -158,14 +158,13 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
             }
           });
         }
-      } catch (err) {
-        console.error('Error fetching data:', err);
+      } catch (error) {
         dispatch({
           type: ACTIONS.SET_STATUS,
           payload: {
             type: 'error',
-            message: err.status === 404 
-              ? ERROR_MESSAGES.INVALID_INVITATION 
+            message: error.status === 404 
+              ? ERROR_MESSAGES.INVALID_INVITATION
               : ERROR_MESSAGES.FETCH_ERROR
           }
         });
@@ -267,10 +266,11 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch({ type: ACTIONS.SET_SUBMITTING, payload: true });
+    dispatch({ type: ACTIONS.RESET_STATUS });
     
     try {
       const selectedGuests = formState.formData.guests.filter(guest => guest.selected);
-      
+
       const reservationData = {
         guests: selectedGuests.map(guest => guest.name),
         adults: formState.formData.adults,
@@ -283,7 +283,6 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
       
       onSuccess(response);
     } catch (error) {
-      console.error('Error submitting reservation:', error);
       dispatch({
         type: ACTIONS.SET_STATUS,
         payload: { 

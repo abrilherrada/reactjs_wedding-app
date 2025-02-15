@@ -11,8 +11,9 @@ import styles from './Lodging.module.css';
 
 const ERROR_MESSAGES = {
   FETCH_ERROR: 'No pudimos cargar tu información. Tocá el botón para intentar de nuevo.',
-  NO_INVITATION: 'No encontramos tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por WhatsApp.',
-  CANCEL_ERROR: 'No pudimos cancelar tu reserva. Tocá el botón para intentar de nuevo.'
+  CANCEL_ERROR: 'No pudimos cancelar tu reserva. Tocá el botón para intentar de nuevo.',
+  NO_INVITATION_ID: 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por WhatsApp.',
+  SERVER_ERROR: 'Hubo un problema con el servidor. Intentá de nuevo más tarde.'
 };
 
 const Lodging = () => {
@@ -36,15 +37,23 @@ const Lodging = () => {
     setStatus({ type: null, message: null });
     
     try {
-      if (invitationId) {
-        const reservationData = await getLodgingReservation(invitationId);
-        setReservation(reservationData); // reservationData will be null if no reservation exists
+      if (!invitationId) {
+        setStatus({
+          type: 'error',
+          message: ERROR_MESSAGES.NO_INVITATION_ID
+        });
+        return;
       }
+
+      const reservationData = await getLodgingReservation(invitationId);
+      setReservation(reservationData); // reservationData will be null if no reservation exists
     } catch (error) {
       console.error('Error fetching reservation:', error);
       setStatus({
         type: 'error',
-        message: ERROR_MESSAGES.FETCH_ERROR
+        message: error.status >= 500 
+          ? ERROR_MESSAGES.SERVER_ERROR 
+          : ERROR_MESSAGES.FETCH_ERROR
       });
     } finally {
       if (shouldSetLoading) {

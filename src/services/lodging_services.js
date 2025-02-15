@@ -8,14 +8,12 @@ const LODGING_API_BASE_URL = 'https://oovzh5owug.execute-api.us-east-1.amazonaws
 export const getLodgingAvailability = async () => {
   try {
     const response = await fetch(LODGING_API_BASE_URL);
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `Error: ${response.status}`);
-    }
+    if (!response.ok) throw response;
     return await response.json();
   } catch (error) {
-    console.error('Error fetching lodging availability:', error);
-    throw error;
+    const customError = new Error();
+    customError.status = error.status || 500;
+    throw customError;
   }
 };
 
@@ -29,19 +27,17 @@ export const getLodgingReservation = async (invitationId) => {
   try {
     const response = await fetch(`${LODGING_API_BASE_URL}/${invitationId}`);
     if (response.status === 404) {
-      return null; // No reservation found is a valid case
+      return null; // No reservation is a valid case
     }
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `Error: ${response.status}`);
-    }
+    if (!response.ok) throw response;
     return await response.json();
   } catch (error) {
-    if (error.message === 'Error: 404') {
+    if (error.status === 404) {
       return null; // Handle case where error was already thrown with 404
     }
-    console.error('Error fetching lodging reservation:', error);
-    throw error;
+    const customError = new Error();
+    customError.status = error.status || 500;
+    throw customError;
   }
 };
 
@@ -53,25 +49,30 @@ export const getLodgingReservation = async (invitationId) => {
  * @param {number} reservationData.adults - Number of adults
  * @param {number} reservationData.children - Number of children
  * @returns {Promise<Object>} The created reservation
- * @throws {Error} If creation fails or spots are not available
+ * @throws {Error} If creation fails
  */
 export const createLodgingReservation = async (invitationId, reservationData) => {
+  if (!invitationId) {
+    const error = new Error();
+    error.status = 400;
+    throw error;
+  }
+
   try {
     const response = await fetch(`${LODGING_API_BASE_URL}/${invitationId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(reservationData),
+      body: JSON.stringify(reservationData)
     });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `Error: ${response.status}`);
-    }
+    
+    if (!response.ok) throw response;
     return await response.json();
   } catch (error) {
-    console.error('Error creating lodging reservation:', error);
-    throw error;
+    const customError = new Error();
+    customError.status = error.status || 500;
+    throw customError;
   }
 };
 
@@ -86,22 +87,27 @@ export const createLodgingReservation = async (invitationId, reservationData) =>
  * @throws {Error} If update fails or reservation not found
  */
 export const updateLodgingReservation = async (invitationId, reservationData) => {
+  if (!invitationId) {
+    const error = new Error();
+    error.status = 400;
+    throw error;
+  }
+
   try {
     const response = await fetch(`${LODGING_API_BASE_URL}/${invitationId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(reservationData),
+      body: JSON.stringify(reservationData)
     });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `Error: ${response.status}`);
-    }
+    
+    if (!response.ok) throw response;
     return await response.json();
   } catch (error) {
-    console.error('Error updating lodging reservation:', error);
-    throw error;
+    const customError = new Error();
+    customError.status = error.status || 500;
+    throw customError;
   }
 };
 
@@ -112,17 +118,22 @@ export const updateLodgingReservation = async (invitationId, reservationData) =>
  * @throws {Error} If deletion fails or reservation not found
  */
 export const deleteLodgingReservation = async (invitationId) => {
+  if (!invitationId) {
+    const error = new Error();
+    error.status = 400;
+    throw error;
+  }
+
   try {
     const response = await fetch(`${LODGING_API_BASE_URL}/${invitationId}`, {
-      method: 'DELETE',
+      method: 'DELETE'
     });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `Error: ${response.status}`);
-    }
+    
+    if (!response.ok) throw response;
     return await response.json();
   } catch (error) {
-    console.error('Error deleting lodging reservation:', error);
-    throw error;
+    const customError = new Error();
+    customError.status = error.status || 500;
+    throw customError;
   }
 };
