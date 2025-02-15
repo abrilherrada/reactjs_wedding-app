@@ -8,7 +8,7 @@ const Modal = ({
   onConfirm,
   onCancel,
   confirmText = 'Confirmar',
-  cancelText = 'Cancelar',
+  cancelText = 'Cerrar',
   isOpen 
 }) => {
   if (!isOpen) return null;
@@ -20,16 +20,14 @@ const Modal = ({
         {message && <div className={styles.message}>{message}</div>}
         
         <div className={styles.actions}>
-          <Button 
-            onClick={onCancel}
-          >
+          <Button onClick={onCancel}>
             {cancelText}
           </Button>
-          <Button 
-            onClick={onConfirm}
-          >
-            {confirmText}
-          </Button>
+          {onConfirm && (
+            <Button onClick={onConfirm}>
+              {confirmText}
+            </Button>
+          )}
         </div>
       </div>
     </div>
@@ -42,7 +40,7 @@ Modal.propTypes = {
     PropTypes.string,
     PropTypes.element
   ]),
-  onConfirm: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func,
   onCancel: PropTypes.func.isRequired,
   confirmText: PropTypes.string,
   cancelText: PropTypes.string,

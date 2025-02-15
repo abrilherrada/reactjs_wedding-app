@@ -29,8 +29,10 @@ const Lodging = () => {
 
   const invitationId = new URLSearchParams(window.location.search).get('invitationId');
 
-  const fetchReservation = useCallback(async () => {
-    setLoading(true);
+  const fetchReservation = useCallback(async (shouldSetLoading = true) => {
+    if (shouldSetLoading) {
+      setLoading(true);
+    }
     setStatus({ type: null, message: null });
     
     try {
@@ -45,13 +47,21 @@ const Lodging = () => {
         message: ERROR_MESSAGES.FETCH_ERROR
       });
     } finally {
-      setLoading(false);
+      if (shouldSetLoading) {
+        setLoading(false);
+      }
     }
   }, [invitationId]);
 
+  // Initial fetch
   useEffect(() => {
-    fetchReservation();
-  }, [fetchReservation, guestInfo]);
+    fetchReservation(true);
+  }, [fetchReservation]);
+
+  // Refetch when guestInfo changes
+  useEffect(() => {
+    fetchReservation(false);
+  }, [guestInfo, fetchReservation]);
 
   const handleFormVisibility = (visible) => {
     setShowForm(visible);

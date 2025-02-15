@@ -27,10 +27,11 @@ const ACTIONS = {
   SET_SUBMITTING: 'SET_SUBMITTING',
   SET_STATUS: 'SET_STATUS',
   TOGGLE_CONFIRM_MODAL: 'TOGGLE_CONFIRM_MODAL',
+  TOGGLE_EMPTY_MODAL: 'TOGGLE_EMPTY_MODAL',
   RESET_STATUS: 'RESET_STATUS'
 };
 
-const createInitialState = (guestInfo, existingReservation = null, isModifying = false) => {
+const createInitialState = (guestInfo, existingReservation = null) => {
   const guests = guestInfo ? [
     guestInfo.mainGuest,
     ...(guestInfo.hasCompanion ? [guestInfo.companion] : []),
@@ -41,15 +42,14 @@ const createInitialState = (guestInfo, existingReservation = null, isModifying =
     formData: {
       guests: guests.map(guest => ({
         ...guest,
-        selected: isModifying 
-          ? existingReservation?.guests.includes(guest.name)
-          : true
+        selected: existingReservation?.guests.includes(guest.name) ?? false
       })),
       adults: 0,
       children: 0
     },
     submitting: false,
     showConfirmModal: false,
+    showEmptyModal: false,
     status: { type: null, message: null }
   };
 };
@@ -97,6 +97,11 @@ const formReducer = (state, action) => {
         ...state,
         showConfirmModal: action.payload
       };
+    case ACTIONS.TOGGLE_EMPTY_MODAL:
+      return {
+        ...state,
+        showEmptyModal: action.payload
+      };
     case ACTIONS.RESET_STATUS:
       return {
         ...state,
@@ -115,7 +120,7 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
 
   // Add form state management
   const [formState, dispatch] = useReducer(formReducer, null, () => 
-    createInitialState(guestInfo, reservation, isModifying)
+    createInitialState(guestInfo, reservation)
   );
 
   // Effect for fetching initial data
@@ -172,6 +177,41 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
     fetchInitialData();
   }, [invitationId]);
 
+  // Effect for updating availability info when reservations change
+  useEffect(() => {
+    const updateAvailability = async () => {
+      try {
+        const availabilityData = await getLodgingAvailability();
+        setAvailabilityInfo(availabilityData);
+        
+        // Check if there are spots available
+        if (availabilityData.taken_spots >= availabilityData.total_spots) {
+          dispatch({
+            type: ACTIONS.SET_STATUS,
+            payload: {
+              type: 'error',
+              message: ERROR_MESSAGES.NO_AVAILABILITY
+            }
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching availability:', err);
+        dispatch({
+          type: ACTIONS.SET_STATUS,
+          payload: {
+            type: 'error',
+            message: ERROR_MESSAGES.AVAILABILITY_ERROR
+          }
+        });
+      }
+    };
+
+    // Only update availability if we're modifying an existing reservation
+    if (isModifying) {
+      updateAvailability();
+    }
+  }, [isModifying, reservation]);
+
   // Derived state for guest attendance
   const attendanceStatus = useMemo(() => {
     if (!guestInfo) return null;
@@ -203,10 +243,10 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
     if (guestInfo && hasNoGuests) {
       dispatch({ 
         type: ACTIONS.SET_FORM_DATA, 
-        payload: createInitialState(guestInfo, reservation, isModifying).formData 
+        payload: createInitialState(guestInfo, reservation).formData 
       });
     }
-  }, [guestInfo, reservation, isModifying, hasNoGuests]);
+  }, [guestInfo, reservation, hasNoGuests]);
 
   const summaryMessage = useMemo(() => {
     let guests = formState.formData.guests.filter(guest => guest.selected).map(guest => (
@@ -257,6 +297,14 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
       dispatch({ type: ACTIONS.SET_SUBMITTING, payload: false });
       dispatch({ type: ACTIONS.TOGGLE_CONFIRM_MODAL, payload: false });
     }
+  };
+
+  const handleConfirmClick = () => {
+    const hasSelectedGuests = formState.formData.guests.some(guest => guest.selected);
+    dispatch({ 
+      type: hasSelectedGuests ? ACTIONS.TOGGLE_CONFIRM_MODAL : ACTIONS.TOGGLE_EMPTY_MODAL, 
+      payload: true 
+    });
   };
 
   const renderContent = () => {
@@ -374,10 +422,7 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
         
         <div className={styles.actions}>
           <Button onClick={onClose}>Volver</Button>
-          <Button 
-            onClick={() => dispatch({ type: ACTIONS.TOGGLE_CONFIRM_MODAL, payload: true })}
-            disabled={formState.submitting || formState.formData.guests.every(guest => !guest.selected)}
-          >
+          <Button onClick={handleConfirmClick}>
             Confirmar reserva
           </Button>
         </div>
@@ -417,6 +462,15 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
               cancelText="Volver"
               onConfirm={handleSubmit}
               onCancel={() => dispatch({ type: ACTIONS.TOGGLE_CONFIRM_MODAL, payload: false })}
+            />
+          )}
+
+          {formState.showEmptyModal && (
+            <Modal
+              isOpen={formState.showEmptyModal}
+              title="La reserva está vacía"
+              message="Para poder continuar, tenés que marcar las personas para las cuales querés hacer la reserva."
+              onCancel={() => dispatch({ type: ACTIONS.TOGGLE_EMPTY_MODAL, payload: false })}
             />
           )}
         </>
