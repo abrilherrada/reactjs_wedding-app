@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { deleteLodgingReservation } from '../../../services/lodging_services';
+import { deleteReservation } from '../../../services/reservation_services';
 import Button from '../../Button/Button';
 import Modal from '../../Modal/Modal';
-import styles from './LodgingStatus.module.css';
+import styles from './ReservationStatus.module.css';
 
-const LodgingStatus = ({ 
+const ReservationStatus = ({
+  reservationType,
   reservation, 
   onModify, 
   onCancelSuccess, 
@@ -18,7 +19,7 @@ const LodgingStatus = ({
   const handleCancel = async () => {
     setIsSubmitting(true);
     try {
-      await deleteLodgingReservation(reservation.invitationId);
+      await deleteReservation(reservation.invitationId, reservationType);
       onCancelSuccess();
     } catch (error) {
       console.error('Error canceling reservation:', error);
@@ -36,7 +37,7 @@ const LodgingStatus = ({
       <div className={styles.guestList}>
         {guests.map((guest, index) => (
           <div key={`guest-${index}`}>
-            <span>{guest}</span>
+            <span>🖤 {guest}</span>
           </div>
         ))}
       </div>
@@ -69,7 +70,10 @@ const LodgingStatus = ({
   );
 };
 
-LodgingStatus.propTypes = {
+export default ReservationStatus;
+
+ReservationStatus.propTypes = {
+  reservationType: PropTypes.string.isRequired,
   reservation: PropTypes.shape({
     invitationId: PropTypes.string.isRequired,
     guests: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -80,5 +84,3 @@ LodgingStatus.propTypes = {
   onCancelSuccess: PropTypes.func.isRequired,
   onCancelError: PropTypes.func.isRequired
 };
-
-export default LodgingStatus;

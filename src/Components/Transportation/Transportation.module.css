@@ -83,10 +83,6 @@
   color: var(--text);
 }
 
-.bookButton {
-  margin: 1rem auto 0.25rem auto;
-}
-
 .readMoreButton {
   margin: 1rem auto 0 auto;
   font-size: 1.25rem;
@@ -105,11 +101,19 @@
   .container {
       padding: 1rem 0.5rem;
   }
+
+  .card {
+    padding: 1rem;
+  }
 }
 
 @media (min-width: 768px) {
   .container {
       padding: 1.5rem 2rem;
+  }
+
+  .card {
+    padding: 2rem;
   }
 }
 

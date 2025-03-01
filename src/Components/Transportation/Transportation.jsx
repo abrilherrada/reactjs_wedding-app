@@ -1,9 +1,15 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Button from '../Button/Button';
+import Reservation from '../Reservation/Reservation';
 import styles from './Transportation.module.css';
 
 const Transportation = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isTextHidden, setIsTextHidden] = useState(false);
+
+  const handleTextVisibility = useCallback(({isTextHidden}) => {
+    setIsTextHidden(isTextHidden);
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -19,31 +25,27 @@ const Transportation = () => {
           <p className={styles.paragraph}>Si te quedás en Agua de Oro o en alguna localidad aledaña (como Salsipuedes, La Granja, Villa Cerro Azul, El Manzano), el taxi va a ser la opción más práctica y rápida.</p>
         </article>
         <article className={styles.card}>
-          <h3>Desde Córdoba</h3>
-          <p className={styles.paragraph}>Si vas a ir desde la Ciudad de Córdoba, tenés varias opciones de traslado.</p>
-          <div className={`${styles.expandableContent} ${isExpanded ? styles.expanded : ''}`}>
-            <ul className={styles.list}>
-              <li>
-                <span className={styles.listItemTitle}>Colectivo + taxi:&nbsp;</span>
-                <span className={styles.listItemText}>Podés tomar un colectivo interurbano en la Nueva Terminal de Ómnibus de Córdoba (zona centro). El servicio 472 de la línea Córdoba - Agua de Oro x Río Ceballos de la empresa Fonobus sale a las 10&nbsp;a.&nbsp;m. y te podés bajar en la parada Ruta E53 (Tres Cóndores) en El Manzano a las 11:45 &nbsp;a.&nbsp;m. Desde ahí, podés tomarte un taxi hasta el salón, que está a 2,5 kilómetros de la parada.</span>
-              </li>
-              <li>
-                <span className={styles.listItemTitle}>Taxi/Remis/Uber:&nbsp;</span>
-                <span className={styles.listItemText}>Aunque es de las opciones más costosas, también es de las más rápidas y prácticas. Un taxi o remis puede llegar a salir entre $40.000 y $60.000 aproximadamente, y un Uber puede salir entre $30.000 y $40.000. Es posible que sea más difícil conseguir un Uber que te lleve hasta allá.</span>
-              </li>
-              <li>
-                <span className={styles.listItemTitle}>Trafic:&nbsp;</span>
-                <span className={styles.listItemText}>Como queremos facilitarles las cosas a nuestros invitados y que empiecen el día lo más relajados que se pueda, se nos occurrió ofrecerles esta opción. El costo sería de $10.000 por persona aproximadamente. Nosotros nos encargaríamos de la logística (buscar una empresa, reservar la cantidad de vehículos que hagan falta y coordinar dónde y cuándo los pasarían a buscar). Lo único que necesitamos es que los que elijan esta opción, toquen el botón que se encuentra abajo para reservar los lugares.</span>
-              </li>
-            </ul>
-            {/*BOTON PARA RESERVAR TRASLADO*/}
-            <Button
-                className={styles.bookButton}
-              >
-                Reservar trafic
-            </Button>
-          </div>
-          <Button 
+          {!isTextHidden && (
+            <>
+              <h3>Desde Córdoba</h3>
+              <p className={styles.paragraph}>Si vas a ir desde la Ciudad de Córdoba, tenés varias opciones de traslado.</p>
+              <div className={`${styles.expandableContent} ${isExpanded ? styles.expanded : ''}`}>
+                <ul className={styles.list}>
+                  <li>
+                    <span className={styles.listItemTitle}>Colectivo + taxi:&nbsp;</span>
+                    <span className={styles.listItemText}>Podés tomar un colectivo interurbano en la Nueva Terminal de Ómnibus de Córdoba (zona centro). El servicio 472 de la línea Córdoba - Agua de Oro x Río Ceballos de la empresa Fonobus sale a las 10&nbsp;a.&nbsp;m. y te podés bajar en la parada Ruta E53 (Tres Cóndores) en El Manzano a las 11:45 &nbsp;a.&nbsp;m. Desde ahí, podés tomarte un taxi hasta el salón, que está a 2,5 kilómetros de la parada.</span>
+                  </li>
+                  <li>
+                    <span className={styles.listItemTitle}>Taxi/Remis/Uber:&nbsp;</span>
+                    <span className={styles.listItemText}>Aunque es de las opciones más costosas, también es de las más rápidas y prácticas. Un taxi o remis puede llegar a salir entre $40.000 y $60.000 aproximadamente, y un Uber puede salir entre $30.000 y $40.000. Es posible que sea más difícil conseguir un Uber que te lleve hasta allá.</span>
+                  </li>
+                  <li>
+                    <span className={styles.listItemTitle}>Trafic:&nbsp;</span>
+                    <span className={styles.listItemText}>Como queremos facilitarles las cosas a nuestros invitados y que empiecen el día lo más relajados que se pueda, se nos occurrió ofrecerles esta opción. El costo sería de $10.000 por persona aproximadamente. Nosotros nos encargaríamos de la logística (buscar una empresa, reservar la cantidad de vehículos que hagan falta y coordinar dónde y cuándo los pasarían a buscar). Lo único que necesitamos es que los que elijan esta opción, toquen el botón que se encuentra abajo para reservar los lugares.</span>
+                  </li>
+                </ul>
+              </div>
+              <Button 
                 onClick={() => setIsExpanded(!isExpanded)}
                 className={styles.readMoreButton}
               >
@@ -67,6 +69,15 @@ const Transportation = () => {
                   />
                 </svg>
               </Button>
+            </>
+          )}
+          {isTextHidden && (
+            <h3>Reserva de trafic</h3>
+          )}
+          <Reservation
+            reservationType='transportation'
+            onReservationChange={handleTextVisibility}
+          />
         </article>
       </div>
   </div>

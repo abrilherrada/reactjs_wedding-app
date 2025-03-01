@@ -1,13 +1,13 @@
-const LODGING_API_BASE_URL = 'https://oovzh5owug.execute-api.us-east-1.amazonaws.com/default/wedding_lodging';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 /**
- * Fetches general lodging availability information
+ * Fetches general availability information
  * @returns {Promise<Object>} The availability information including total and taken spots
  * @throws {Error} If API errors occur
  */
-export const getLodgingAvailability = async () => {
+export const getAvailability = async (reservationType) => {
   try {
-    const response = await fetch(LODGING_API_BASE_URL);
+    const response = await fetch(API_BASE_URL + "/" + reservationType);
     if (!response.ok) throw response;
     return await response.json();
   } catch (error) {
@@ -18,14 +18,14 @@ export const getLodgingAvailability = async () => {
 };
 
 /**
- * Fetches lodging reservation for a specific invitation
+ * Fetches reservation for a specific invitation
  * @param {string} invitationId - The unique identifier for the invitation
  * @returns {Promise<Object|null>} The reservation information if it exists, or null if not found
  * @throws {Error} If other API errors occur
  */
-export const getLodgingReservation = async (invitationId) => {
+export const getReservation = async (invitationId, reservationType) => {
   try {
-    const response = await fetch(`${LODGING_API_BASE_URL}/${invitationId}`);
+    const response = await fetch(`${API_BASE_URL + "/" + reservationType}/${invitationId}`);
     if (response.status === 404) {
       return null; // No reservation is a valid case
     }
@@ -42,7 +42,7 @@ export const getLodgingReservation = async (invitationId) => {
 };
 
 /**
- * Creates a new lodging reservation
+ * Creates a new reservation
  * @param {string} invitationId - The unique identifier for the invitation
  * @param {Object} reservationData - The reservation data
  * @param {string[]} reservationData.guests - Array of guest names
@@ -51,7 +51,7 @@ export const getLodgingReservation = async (invitationId) => {
  * @returns {Promise<Object>} The created reservation
  * @throws {Error} If creation fails
  */
-export const createLodgingReservation = async (invitationId, reservationData) => {
+export const createReservation = async (invitationId, reservationData, reservationType) => {
   if (!invitationId) {
     const error = new Error();
     error.status = 400;
@@ -59,7 +59,7 @@ export const createLodgingReservation = async (invitationId, reservationData) =>
   }
 
   try {
-    const response = await fetch(`${LODGING_API_BASE_URL}/${invitationId}`, {
+    const response = await fetch(`${API_BASE_URL + "/" + reservationType}/${invitationId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ export const createLodgingReservation = async (invitationId, reservationData) =>
 };
 
 /**
- * Updates an existing lodging reservation
+ * Updates an existing reservation
  * @param {string} invitationId - The unique identifier for the invitation
  * @param {Object} reservationData - The updated reservation data
  * @param {string[]} reservationData.guests - Array of guest names
@@ -86,7 +86,7 @@ export const createLodgingReservation = async (invitationId, reservationData) =>
  * @returns {Promise<Object>} The updated reservation
  * @throws {Error} If update fails or reservation not found
  */
-export const updateLodgingReservation = async (invitationId, reservationData) => {
+export const updateReservation = async (invitationId, reservationData, reservationType) => {
   if (!invitationId) {
     const error = new Error();
     error.status = 400;
@@ -94,7 +94,7 @@ export const updateLodgingReservation = async (invitationId, reservationData) =>
   }
 
   try {
-    const response = await fetch(`${LODGING_API_BASE_URL}/${invitationId}`, {
+    const response = await fetch(`${API_BASE_URL + "/" + reservationType}/${invitationId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -112,12 +112,12 @@ export const updateLodgingReservation = async (invitationId, reservationData) =>
 };
 
 /**
- * Deletes an existing lodging reservation
+ * Deletes an existing reservation
  * @param {string} invitationId - The unique identifier for the invitation
  * @returns {Promise<Object>} The response message
  * @throws {Error} If deletion fails or reservation not found
  */
-export const deleteLodgingReservation = async (invitationId) => {
+export const deleteReservation = async (invitationId, reservationType) => {
   if (!invitationId) {
     const error = new Error();
     error.status = 400;
@@ -125,7 +125,7 @@ export const deleteLodgingReservation = async (invitationId) => {
   }
 
   try {
-    const response = await fetch(`${LODGING_API_BASE_URL}/${invitationId}`, {
+    const response = await fetch(`${API_BASE_URL + "/" + reservationType}/${invitationId}`, {
       method: 'DELETE'
     });
     
