@@ -1,15 +1,15 @@
 import { useState, useEffect, useMemo, useReducer } from 'react';
 import { getRSVPInfo } from '../../../services/rsvp_services';
-import { getLodgingAvailability, createLodgingReservation, updateLodgingReservation } from '../../../services/lodging_services';
+import { getAvailability, createReservation, updateReservation } from '../../../services/reservation_services';
 import PropTypes from 'prop-types';
 import Button from '../../Button/Button';
 import Modal from '../../Modal/Modal';
 import Spinner from '../../Spinner/Spinner';
 import WarningIcon from '../../../assets/icons/WarningIcon';
-import styles from './LodgingForm.module.css';
+import styles from './ReservationForm.module.css';
 
 const ERROR_MESSAGES = {
-  NO_INVITATION_ID: 'Para reservar tu alojamiento, usá el enlace que te enviamos por WhatsApp.',
+  NO_INVITATION_ID: 'Para poder hacer una reserva, usá el enlace que te enviamos por WhatsApp.',
   INVALID_INVITATION: 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por WhatsApp.',
   NO_AVAILABILITY: 'Ya no hay lugares disponibles. ☹️',
   FETCH_ERROR: 'Hubo un error al cargar la información. Tocá el botón para intentar de nuevo.',
@@ -38,14 +38,21 @@ const createInitialState = (guestInfo, existingReservation = null) => {
     ...(guestInfo.hasChildren ? guestInfo.children : [])
   ].filter(hasConfirmedAttendance) : [];
 
+  const mappedGuests = guests.map(guest => ({
+    ...guest,
+    selected: existingReservation?.guests.includes(guest.name) ?? false
+  }));
+
+  // Calculate initial counts based on selected guests
+  const selectedGuests = mappedGuests.filter(guest => guest.selected);
+  const adults = selectedGuests.filter(guest => !guest.isChild).length;
+  const children = selectedGuests.filter(guest => guest.isChild).length;
+
   return {
     formData: {
-      guests: guests.map(guest => ({
-        ...guest,
-        selected: existingReservation?.guests.includes(guest.name) ?? false
-      })),
-      adults: 0,
-      children: 0
+      guests: mappedGuests,
+      adults,
+      children
     },
     submitting: false,
     showConfirmModal: false,
@@ -112,7 +119,15 @@ const formReducer = (state, action) => {
   }
 };
 
-const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = false, reservation = null }) => {
+const ReservationForm = ({
+  invitationId,
+  reservationType,
+  onClose,
+  onRetry,
+  onSuccess,
+  isModifying = false,
+  reservation = null
+}) => {
   // State for guest and availability information
   const [guestInfo, setGuestInfo] = useState(null);
   const [availabilityInfo, setAvailabilityInfo] = useState(null);
@@ -139,10 +154,10 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
 
     const fetchInitialData = async () => {
       try {
-        // Fetch both guest info and lodging availability in parallel
+        // Fetch both guest info and availability in parallel
         const [guestData, availabilityData] = await Promise.all([
           getRSVPInfo(invitationId),
-          getLodgingAvailability()
+          getAvailability(reservationType)
         ]);
 
         setGuestInfo(guestData);
@@ -174,13 +189,13 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
     };
 
     fetchInitialData();
-  }, [invitationId]);
+  }, [invitationId, reservationType]);
 
   // Effect for updating availability info when reservations change
   useEffect(() => {
     const updateAvailability = async () => {
       try {
-        const availabilityData = await getLodgingAvailability();
+        const availabilityData = await getAvailability(reservationType);
         setAvailabilityInfo(availabilityData);
         
         // Check if there are spots available
@@ -209,7 +224,7 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
     if (isModifying) {
       updateAvailability();
     }
-  }, [isModifying, reservation]);
+  }, [isModifying, reservation, reservationType]);
 
   // Derived state for guest attendance
   const attendanceStatus = useMemo(() => {
@@ -278,8 +293,8 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
       };
 
       const response = isModifying 
-        ? await updateLodgingReservation(invitationId, reservationData)
-        : await createLodgingReservation(invitationId, reservationData);
+        ? await updateReservation(invitationId, reservationData, reservationType)
+        : await createReservation(invitationId, reservationData, reservationType);
       
       onSuccess(response);
     } catch (error) {
@@ -313,8 +328,8 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
       return (
         <>
           <div className={`${styles.messageContainer} ${styles.error}`}>
-            <p>Para poder reservar alojamiento en el salón, primero tenés que confirmar que vas a asistir a la boda.</p>
-            <p>Usá el siguiente botón para ir a la sección de asistencia, seguí los pasos y después volvé para reservar tu alojamiento.</p>
+            <p>Para poder hacer una reserva{reservationType === 'lodging' ? ' de alojamiento' : (reservationType === 'transportation' ? ' de transporte' : '')}, primero tenés que confirmar que vas a asistir a la boda.</p>
+            <p>Usá el siguiente botón para ir a la sección de asistencia, seguí los pasos y después volvé para hacer tu reserva.</p>
           </div>
           <div className={styles.messageActions}>
             <Button
@@ -334,9 +349,9 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
       return (
         <>
           <div className={`${styles.messageContainer} ${styles.error}`}>
-            <p>Como confirmaste que no vas a asistir a la boda, no podés reservar alojamiento en el salón.</p>
-            <p>Si cambiaste de opinión y querés asistir, podés modificar tu respuesta desde la sección de asistencia.</p>
-            <p>Una vez que confirmes tu asistencia, vas a poder reservar tu alojamiento.</p>
+            <p>Como confirmaste que no vas a asistir a la boda, no podés hacer una reserva{reservationType === 'lodging' ? ' de alojamiento' : (reservationType === 'transportation' ? ' de transporte' : '')}.</p>
+            <p>Si cambiaste de opinión y querés asistir, podés modificar tu respuesta en la sección de asistencia.</p>
+            <p>Una vez que confirmes tu asistencia, vas a poder hacer tu reserva.</p>
           </div>
           <div className={styles.messageActions}>
             <Button
@@ -379,8 +394,8 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
         </div>
         
         <div className={styles.guestList}>
-          <h4 className={styles.guestListTitle}>¿Quiénes se quedan?</h4>
-          <p>Seleccioná las personas que se van a alojar en el hotel del salón.</p>
+          <h4 className={styles.guestListTitle}>¿Quiénes {reservationType === 'lodging' ? 'se quedan' : (reservationType === 'transportation' ? 'viajan' : 'son parte de la reserva')}?</h4>
+          <p>Seleccioná a las personas que {reservationType === 'lodging' ? 'se van a alojar en el hotel del salón' : (reservationType === 'transportation' ? 'van a trasladarse en trafic' : 'son parte de la reserva')}.</p>
           
           {/* Attending guests */}
           {attendanceStatus.attending.map((guest, index) => (
@@ -412,7 +427,7 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
             <div>
               {attendanceStatus.notAttending.length > 0 && (
                 <span className={styles.notAttendingMessage}>
-                  No se puede reservar alojamiento para las personas marcadas con una X roja porque informaste que no asistirán a la boda.
+                  No se puede reservar lugares para las personas marcadas con una X roja porque informaste que no asistirán a la boda.
                 </span>
               )}
             </div>
@@ -478,8 +493,9 @@ const LodgingForm = ({ invitationId, onClose, onRetry, onSuccess, isModifying = 
   );
 };
 
-LodgingForm.propTypes = {
+ReservationForm.propTypes = {
   invitationId: PropTypes.string.isRequired,
+  reservationType: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   onRetry: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
@@ -487,4 +503,4 @@ LodgingForm.propTypes = {
   reservation: PropTypes.object
 };
 
-export default LodgingForm;
+export default ReservationForm;

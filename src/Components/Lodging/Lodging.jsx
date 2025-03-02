@@ -1,178 +1,20 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getLodgingReservation } from '../../services/lodging_services';
-import { useRSVP } from '../../context/useRSVP';
-import LodgingForm from './LodgingForm/LodgingForm';
-import LodgingStatus from './LodgingStatus/LodgingStatus';
+import { useState, useCallback } from 'react';
 import Button from '../Button/Button';
-import Spinner from '../Spinner/Spinner';
-import WarningIcon from '../../assets/icons/WarningIcon';
-import CheckIcon from '../../assets/icons/CheckIcon';
+import Reservation from '../Reservation/Reservation';
 import styles from './Lodging.module.css';
 
-const ERROR_MESSAGES = {
-  FETCH_ERROR: 'No pudimos cargar tu información. Tocá el botón para intentar de nuevo.',
-  CANCEL_ERROR: 'No pudimos cancelar tu reserva. Tocá el botón para intentar de nuevo.',
-  NO_INVITATION_ID: 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por WhatsApp.',
-  SERVER_ERROR: 'Hubo un problema con el servidor. Intentá de nuevo más tarde.'
-};
 
 const Lodging = () => {
-  const { guestInfo } = useRSVP();
   const [expandedSections, setExpandedSections] = useState({
     venue: false,
     nearby: false,
     city: false
   });
-  const [showForm, setShowForm] = useState(false);
-  const [reservation, setReservation] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState({ type: null, message: null });
+  const [isTextHidden, setIsTextHidden] = useState(false);
 
-  const invitationId = new URLSearchParams(window.location.search).get('invitationId');
-
-  const fetchReservation = useCallback(async (shouldSetLoading = true) => {
-    if (shouldSetLoading) {
-      setLoading(true);
-    }
-    setStatus({ type: null, message: null });
-    
-    try {
-      if (!invitationId) {
-        setStatus({
-          type: 'error',
-          message: ERROR_MESSAGES.NO_INVITATION_ID
-        });
-        return;
-      }
-
-      const reservationData = await getLodgingReservation(invitationId);
-      setReservation(reservationData); // reservationData will be null if no reservation exists
-    } catch (error) {
-      console.error('Error fetching reservation:', error);
-      setStatus({
-        type: 'error',
-        message: error.status >= 500 
-          ? ERROR_MESSAGES.SERVER_ERROR 
-          : ERROR_MESSAGES.FETCH_ERROR
-      });
-    } finally {
-      if (shouldSetLoading) {
-        setLoading(false);
-      }
-    }
-  }, [invitationId]);
-
-  // Initial fetch
-  useEffect(() => {
-    fetchReservation(true);
-  }, [fetchReservation]);
-
-  // Refetch when guestInfo changes
-  useEffect(() => {
-    fetchReservation(false);
-  }, [guestInfo, fetchReservation]);
-
-  const handleFormVisibility = (visible) => {
-    setShowForm(visible);
-    setStatus({
-      type: null,
-      message: null
-    });
-  };
-
-  const handleReservationSuccess = (newReservation) => {
-    setReservation(newReservation);
-    setShowForm(false);
-    setStatus({
-      type: 'success',
-      message: '¡Listo! Ya te guardamos tus lugares. 😎'
-    });
-  };
-
-  const handleCancelSuccess = () => {
-    setReservation(null);
-    setStatus({
-      type: 'success',
-      message: '¡Listo! Cancelamos tu reserva.'
-    });
-  };
-
-  const handleCancelError = () => {
-    setStatus({
-      type: 'error',
-      message: ERROR_MESSAGES.CANCEL_ERROR
-    });
-  };
-
-  const renderVenueAccommodation = () => {
-    if (status.type === 'error') {
-      return (
-        <>
-          <p className={`${styles.message} ${styles.error}`}>
-            <span>
-              <WarningIcon />
-            </span>
-            <span>{status.message}</span>
-          </p>
-          <Button 
-            onClick={fetchReservation}
-            className={styles.retryButton}
-          >
-            Intentar de nuevo
-          </Button>
-        </>
-      );
-    }
-
-    return (
-      <>
-        {status.type === 'success' && (
-          <p className={`${styles.message} ${styles.success}`}>
-            <span>
-              <CheckIcon />
-            </span>
-            <span>{status.message}</span>
-          </p>
-        )}
-
-        {loading ? (
-          <Spinner />
-        ) : showForm ? (
-          <LodgingForm 
-            invitationId={invitationId}
-            onClose={() => handleFormVisibility(false)}
-            onRetry={fetchReservation}
-            onSuccess={handleReservationSuccess}
-            isModifying={!!reservation}
-            reservation={reservation}
-          />
-        ) : reservation ? (
-          <LodgingStatus 
-            reservation={reservation}
-            onModify={() => handleFormVisibility(true)}
-            onCancelSuccess={handleCancelSuccess}
-            onCancelError={handleCancelError}
-          />
-        ) : (
-          <>
-            <p className={styles.paragraph}>El salón cuenta con alojamiento propio, que podemos usar la noche del evento (30 de agosto de 2025).</p>
-            <div className={`${styles.expandableContent} ${expandedSections.venue ? styles.expanded : ''}`}>
-              <p className={styles.paragraph}>El precio aproximado es de $40.000 por persona por noche. Este precio varia según la cantidad total de personas que decidan quedarse y la fecha de pago.</p>
-              <p className={styles.paragraph}>Hay 66 lugares disponibles, asi que, si elegís esta opción, es necesario que nos avises cuanto antes. Para hacerlo, tocá el botón que se encuentra abajo.</p>
-              <p className={styles.paragraph}>Por ahora, solo hay disponibilidad para la noche del evento. Mas cerca de la fecha vamos a saber si se puede ir desde el día anterior (29 de agosto).</p>
-              <p className={styles.paragraph}>Nosotros nos vamos a quedar ahí. Nuestra idea es pasar la mañana siguiente con los que se queden para aprovechar su visita al máximo.</p>
-              <Button
-                className={styles.bookButton}
-                onClick={() => handleFormVisibility(true)}
-              >
-                Reservar
-              </Button>
-            </div>
-          </>
-        )}
-      </>
-    );
-  };
+  const handleTextVisibility = useCallback(({isTextHidden}) => {
+    setIsTextHidden(isTextHidden);
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -184,34 +26,49 @@ const Lodging = () => {
         <p className={styles.paragraph}>El evento se va a llevar a cabo en la localidad de Agua de Oro, que queda a 45 km de la Ciudad de Córdoba.</p>
         <p className={styles.paragraph}>Te proponemos tres alternativas de lugares para quedarte:</p>
         <article className={styles.card}>
-          <h3>En el salón</h3>
-          {renderVenueAccommodation()}
-          {!loading && !showForm && !reservation ?
-            <Button 
-              onClick={() => setExpandedSections(prev => ({ ...prev, venue: !prev.venue }))}
-              className={styles.readMoreButton}
-            >
-              <span>
-                {expandedSections.venue ? 'Ver menos' : 'Ver más'}
-              </span>
-              <svg 
-                className={`${styles.arrow} ${expandedSections.venue ? styles.arrowUp : ''}`}
-                width="12" 
-                height="8" 
-                viewBox="0 0 12 8" 
-                fill="none" 
-                xmlns="http://www.w3.org/2000/svg"
+          {!isTextHidden && (
+            <>
+              <h3>En el salón</h3>
+              <p className={styles.paragraph}>El salón cuenta con alojamiento propio, que podemos usar la noche del evento (30 de agosto de 2025).</p>
+              <div className={`${styles.expandableContent} ${expandedSections.venue ? styles.expanded : ''}`}>
+                <p className={styles.paragraph}>El precio aproximado es de $40.000 por persona por noche. Este precio varia según la cantidad total de personas que decidan quedarse y la fecha de pago.</p>
+                <p className={styles.paragraph}>Hay 66 lugares disponibles, asi que, si elegís esta opción, es necesario que nos avises cuanto antes. Para hacerlo, tocá el botón que se encuentra abajo.</p>
+                <p className={styles.paragraph}>Por ahora, solo hay disponibilidad para la noche del evento. Mas cerca de la fecha vamos a saber si se puede ir desde el día anterior (29 de agosto).</p>
+                <p className={styles.paragraph}>Nosotros nos vamos a quedar ahí. Nuestra idea es pasar la mañana siguiente con los que se queden para aprovechar su visita al máximo.</p>
+              </div>
+              <Button 
+                onClick={() => setExpandedSections(prev => ({ ...prev, venue: !prev.venue }))}
+                className={styles.readMoreButton}
               >
-                <path 
-                  d="M1 1L6 6L11 1" 
-                  stroke="currentColor" 
-                  strokeWidth="3" 
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Button>
-          : null}
+                <span>
+                  {expandedSections.venue ? 'Ver menos' : 'Ver más'}
+                </span>
+                <svg 
+                  className={`${styles.arrow} ${expandedSections.venue ? styles.arrowUp : ''}`}
+                  width="12" 
+                  height="8" 
+                  viewBox="0 0 12 8" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path 
+                    d="M1 1L6 6L11 1" 
+                    stroke="currentColor" 
+                    strokeWidth="3" 
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Button>
+            </>
+          )}
+          {isTextHidden && (
+            <h3>Reserva en el salón</h3>
+          )}
+          <Reservation
+            reservationType='lodging'
+            onReservationChange={handleTextVisibility}
+          />
         </article>
         <article className={styles.card}>
           <h3>En localidades cercanas al salón</h3>

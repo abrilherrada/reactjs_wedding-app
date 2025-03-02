@@ -1,0 +1,37 @@
+.message {
+  font-family: "Cutive", serif;
+  font-size: 0.9rem;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.error {
+  border: var(--border-error);
+  box-shadow: var(--shadow-error);
+  color: var(--text-error);
+  background-color: var(--background-error);
+}
+
+.success {
+  border: var(--border-success);
+  box-shadow: var(--shadow-success);
+  color: var(--text-success);
+  background-color: var(--background-success);
+}
+
+.message span {
+  margin: auto 0;
+}
+
+.bookButton {
+  margin: 1.5rem auto 0.25rem auto;
+}
+
+.retryButton {
+  margin: 1.5rem auto 0 auto;
+}
