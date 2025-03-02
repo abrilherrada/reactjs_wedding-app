@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { getReservation } from '../../services/reservation_services';
 import { useRSVP } from '../../context/useRSVP';
@@ -18,15 +18,16 @@ const ERROR_MESSAGES = {
 };
 
 const Reservation = ({reservationType, onReservationChange}) => {
-  const { guestInfo } = useRSVP();
+  const { guestInfo, loading: rsvpLoading } = useRSVP();
   const [showForm, setShowForm] = useState(false);
   const [reservation, setReservation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState({ type: null, message: null });
+  const fetchRef = useRef();
 
   const invitationId = new URLSearchParams(window.location.search).get('invitationId');
 
-  const fetchReservation = useCallback(async (shouldSetLoading = true) => {
+  fetchRef.current = async (shouldSetLoading = true) => {
     if (shouldSetLoading) {
       setLoading(true);
     }
@@ -42,7 +43,7 @@ const Reservation = ({reservationType, onReservationChange}) => {
       }
 
       const reservationData = await getReservation(invitationId, reservationType);
-      setReservation(reservationData); // reservationData will be null if no reservation exists
+      setReservation(reservationData);
     } catch (error) {
       console.error('Error fetching reservation:', error);
       setStatus({
@@ -56,17 +57,14 @@ const Reservation = ({reservationType, onReservationChange}) => {
         setLoading(false);
       }
     }
-  }, [invitationId, reservationType]);
+  };
 
   // Initial fetch
   useEffect(() => {
-    fetchReservation(true);
-  }, [fetchReservation]);
-
-  // Refetch when guestInfo changes
-  useEffect(() => {
-    fetchReservation(false);
-  }, [guestInfo, fetchReservation]);
+    if (!rsvpLoading && guestInfo) {
+      fetchRef.current(true);
+    }
+  }, [guestInfo, rsvpLoading]);
 
   useEffect(() => {
     onReservationChange?.({
@@ -117,7 +115,7 @@ const Reservation = ({reservationType, onReservationChange}) => {
             <span>{status.message}</span>
           </p>
           <Button 
-            onClick={fetchReservation}
+            onClick={() => fetchRef.current(true)}
             className={styles.retryButton}
           >
             Intentar de nuevo
@@ -144,7 +142,7 @@ const Reservation = ({reservationType, onReservationChange}) => {
             invitationId={invitationId}
             reservationType={reservationType}
             onClose={() => handleFormVisibility(false)}
-            onRetry={fetchReservation}
+            onRetry={() => fetchRef.current(true)}
             onSuccess={handleReservationSuccess}
             isModifying={!!reservation}
             reservation={reservation}

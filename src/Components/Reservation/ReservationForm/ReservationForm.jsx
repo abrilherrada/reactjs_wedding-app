@@ -38,14 +38,21 @@ const createInitialState = (guestInfo, existingReservation = null) => {
     ...(guestInfo.hasChildren ? guestInfo.children : [])
   ].filter(hasConfirmedAttendance) : [];
 
+  const mappedGuests = guests.map(guest => ({
+    ...guest,
+    selected: existingReservation?.guests.includes(guest.name) ?? false
+  }));
+
+  // Calculate initial counts based on selected guests
+  const selectedGuests = mappedGuests.filter(guest => guest.selected);
+  const adults = selectedGuests.filter(guest => !guest.isChild).length;
+  const children = selectedGuests.filter(guest => guest.isChild).length;
+
   return {
     formData: {
-      guests: guests.map(guest => ({
-        ...guest,
-        selected: existingReservation?.guests.includes(guest.name) ?? false
-      })),
-      adults: 0,
-      children: 0
+      guests: mappedGuests,
+      adults,
+      children
     },
     submitting: false,
     showConfirmModal: false,
@@ -152,7 +159,6 @@ const ReservationForm = ({
           getRSVPInfo(invitationId),
           getAvailability(reservationType)
         ]);
-        console.log(availabilityData.taken_spots, availabilityData.total_spots);
 
         setGuestInfo(guestData);
         setAvailabilityInfo(availabilityData);
@@ -191,7 +197,6 @@ const ReservationForm = ({
       try {
         const availabilityData = await getAvailability(reservationType);
         setAvailabilityInfo(availabilityData);
-        console.log(availabilityData.taken_spots, availabilityData.total_spots);
         
         // Check if there are spots available
         if (availabilityData.taken_spots >= availabilityData.total_spots) {
