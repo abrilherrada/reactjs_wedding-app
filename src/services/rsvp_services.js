@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://enpq096kji.execute-api.us-east-1.amazonaws.com/default/wedding_rsvp';
+const RSVP_BASE_URL = import.meta.env.VITE_API_URL + '/rsvp';
 
 /**
  * Fetches RSVP information for a specific invitation
@@ -8,7 +8,7 @@ const API_BASE_URL = 'https://enpq096kji.execute-api.us-east-1.amazonaws.com/def
  */
 export const getRSVPInfo = async (invitationId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}?invitationId=${invitationId}`);
+    const response = await fetch(`${RSVP_BASE_URL}/${invitationId}`);
     if (!response.ok) throw response;
     return await response.json();
   } catch (error) {
@@ -37,7 +37,7 @@ export const updateRSVPStatus = async (updateData) => {
   }
 
   try {
-    const response = await fetch(API_BASE_URL, {
+    const response = await fetch(RSVP_BASE_URL, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
