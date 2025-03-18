@@ -11,7 +11,7 @@ export const ChildShape = PropTypes.shape({
 });
 
 export const GuestInfoShape = PropTypes.shape({
-  invitationId: PropTypes.string.isRequired,
+  _id: PropTypes.string.isRequired,
   mainGuest: GuestShape.isRequired,
   hasCompanion: PropTypes.bool.isRequired,
   companion: GuestShape,

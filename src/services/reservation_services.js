@@ -5,9 +5,9 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
  * @returns {Promise<Object>} The availability information including total and taken spots
  * @throws {Error} If API errors occur
  */
-export const getAvailability = async (reservationType) => {
+export const getAvailability = async (reservationType, invitationId) => {
   try {
-    const response = await fetch(API_BASE_URL + "/" + reservationType);
+    const response = await fetch(API_BASE_URL + "/" + reservationType + "/availability/" + invitationId);
     if (!response.ok) throw response;
     return await response.json();
   } catch (error) {
@@ -30,7 +30,8 @@ export const getReservation = async (invitationId, reservationType) => {
       return null; // No reservation is a valid case
     }
     if (!response.ok) throw response;
-    return await response.json();
+    const data = await response.json();
+    return data.reservation; // Extract just the reservation object
   } catch (error) {
     if (error.status === 404) {
       return null; // Handle case where error was already thrown with 404

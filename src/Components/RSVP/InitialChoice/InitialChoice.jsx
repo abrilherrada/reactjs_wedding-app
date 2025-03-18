@@ -17,7 +17,7 @@ const InitialChoice = ({ guestInfo, onAttend, onDecline }) => {
 
     try {
       const updateData = {
-        invitationId: guestInfo.invitationId,
+        _id: guestInfo._id,
         mainGuest: { ...guestInfo.mainGuest, attending: false },
         companion: guestInfo.hasCompanion ? { ...guestInfo.companion, attending: false } : null,
         children: guestInfo.hasChildren ? guestInfo.children.map(child => ({ ...child, attending: false })) : [],

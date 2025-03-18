@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { getReservation } from '../../services/reservation_services';
-import { useRSVP } from '../../context/useRSVP';
+import { useRSVP } from '../../context/RSVP/useRSVP';
 import ReservationForm from './ReservationForm/ReservationForm';
 import ReservationStatus from './ReservationStatus/ReservationStatus';
 import Button from '../Button/Button';

@@ -157,14 +157,14 @@ const ReservationForm = ({
         // Fetch both guest info and availability in parallel
         const [guestData, availabilityData] = await Promise.all([
           getRSVPInfo(invitationId),
-          getAvailability(reservationType)
+          getAvailability(reservationType, invitationId)
         ]);
 
         setGuestInfo(guestData);
         setAvailabilityInfo(availabilityData);
         
         // Check if there are spots available
-        if (availabilityData.taken_spots >= availabilityData.total_spots) {
+        if (availabilityData.takenSpots >= availabilityData.totalSpots) {
           dispatch({
             type: ACTIONS.SET_STATUS,
             payload: {
@@ -195,11 +195,11 @@ const ReservationForm = ({
   useEffect(() => {
     const updateAvailability = async () => {
       try {
-        const availabilityData = await getAvailability(reservationType);
+        const availabilityData = await getAvailability(reservationType, invitationId);
         setAvailabilityInfo(availabilityData);
         
         // Check if there are spots available
-        if (availabilityData.taken_spots >= availabilityData.total_spots) {
+        if (availabilityData.takenSpots >= availabilityData.totalSpots) {
           dispatch({
             type: ACTIONS.SET_STATUS,
             payload: {
@@ -224,7 +224,7 @@ const ReservationForm = ({
     if (isModifying) {
       updateAvailability();
     }
-  }, [isModifying, reservation, reservationType]);
+  }, [isModifying, reservation, reservationType, invitationId]);
 
   // Derived state for guest attendance
   const attendanceStatus = useMemo(() => {
@@ -390,7 +390,7 @@ const ReservationForm = ({
     return (
       <>
         <div className={styles.availabilityInfo}>
-          <span className={styles.availabilityText}>Quedan {availabilityInfo.total_spots - availabilityInfo.taken_spots} lugares</span>
+          <span className={styles.availabilityText}>Quedan {availabilityInfo.totalSpots - availabilityInfo.takenSpots} lugares</span>
         </div>
         
         <div className={styles.guestList}>

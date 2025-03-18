@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { getRSVPInfo } from '../services/rsvp_services';
+import { getRSVPInfo } from '../../services/rsvp_services.js';
 import { RSVPContext } from './RSVPContext.js';
 
 export const RSVPProvider = ({ children }) => {
