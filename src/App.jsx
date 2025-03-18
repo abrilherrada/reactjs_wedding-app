@@ -1,49 +1,39 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import { RSVPProvider } from './context/RSVPContext.jsx';
-import Navbar from './Components/Navbar/Navbar';
-import Hero from './Components/Hero/Hero';
-import Countdown from './Components/Countdown/Countdown';
-import EventInfo from './Components/EventInfo/EventInfo';
-import RSVP from './Components/RSVP/RSVP';
-import Lodging from './Components/Lodging/Lodging';
-import Transportation from './Components/Transportation/Transportation';
-import Gifts from './Components/Gifts/Gifts';
-import FAQ from './Components/FAQ/FAQ';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { RSVPProvider } from './context/RSVP/RSVPProvider';
+import { AuthProvider } from './context/Auth/AuthProvider';
+import Login from './Components/Auth/Login/Login';
+import GuestList from './Components/GuestList/GuestList';
+import PublicRoute from './routes/PublicRoute';
+import ProtectedRoute from './routes/ProtectedRoute';
 import './App.css';
 
 const App = () => {
-
   return (
     <Router>
-      <RSVPProvider>
-        <div className="App">
-          <Navbar />
-          <main>
-            <Hero />
-            <Countdown />
-            <section id="info">
-              <EventInfo />
-            </section>
-            <section id="rsvp">
-              <RSVP />
-            </section>
-            <section id="gifts">
-              <Gifts />
-            </section>
-            <section id="lodging">
-              <Lodging />
-            </section>
-            <section id="transportation">
-              <Transportation />
-            </section>
-            <section id="faq">
-              <FAQ />
-            </section>
-          </main>
-        </div>
-      </RSVPProvider>
+      <Routes>
+        {/* Public routes with RSVP functionality */}
+        <Route path="/" element={
+          <RSVPProvider>
+            <PublicRoute />
+          </RSVPProvider>
+        } />
+        
+        {/* Admin routes with Auth functionality */}
+        <Route path="/admin/*" element={
+          <AuthProvider>
+            <Routes>
+              <Route path="login" element={<Login />} />
+              <Route path="guests" element={
+                <ProtectedRoute>
+                  <GuestList />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </AuthProvider>
+        } />
+      </Routes>
     </Router>
   )
 }
 
-export default App
+export default App;
