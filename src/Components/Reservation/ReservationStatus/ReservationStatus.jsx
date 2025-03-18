@@ -19,7 +19,7 @@ const ReservationStatus = ({
   const handleCancel = async () => {
     setIsSubmitting(true);
     try {
-      await deleteReservation(reservation._id, reservationType);
+      await deleteReservation(reservation.invitationId, reservationType);
       onCancelSuccess();
     } catch (error) {
       console.error('Error canceling reservation:', error);
@@ -75,7 +75,7 @@ export default ReservationStatus;
 ReservationStatus.propTypes = {
   reservationType: PropTypes.string.isRequired,
   reservation: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
+    invitationId: PropTypes.string.isRequired,
     guests: PropTypes.arrayOf(PropTypes.string).isRequired,
     adults: PropTypes.number.isRequired,
     children: PropTypes.number.isRequired
