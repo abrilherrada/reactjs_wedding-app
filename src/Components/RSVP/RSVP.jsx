@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useRSVP } from '../../context/useRSVP';
+import { useRSVP } from '../../context/RSVP/useRSVP';
 import AttendanceForm from './AttendanceForm/AttendanceForm';
 import InitialChoice from './InitialChoice/InitialChoice';
 import AttendanceStatus from './AttendanceStatus/AttendanceStatus';

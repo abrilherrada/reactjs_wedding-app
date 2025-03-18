@@ -261,7 +261,7 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
     try {
       // If no one is attending and this is not a modification, set all to false
       const updateData = {
-        invitationId: guestInfo.invitationId,
+        _id: guestInfo._id,
         mainGuest: {
           ...state.formData.mainGuest,
           attending: !isModifying && !anyAttending ? false : state.formData.mainGuest?.attending
@@ -300,7 +300,7 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
 
     try {
       const updateData = {
-        invitationId: guestInfo.invitationId,
+        _id: guestInfo._id,
         mainGuest: { ...guestInfo.mainGuest, attending: false },
         companion: guestInfo.hasCompanion ? { ...guestInfo.companion, attending: false } : null,
         children: guestInfo.hasChildren ? guestInfo.children.map(child => ({ ...child, attending: false })) : [],
