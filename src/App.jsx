@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { RSVPProvider } from './context/RSVP/RSVPProvider';
 import { AuthProvider } from './context/Auth/AuthProvider';
-import Login from './Components/Auth/Login/Login';
+import Auth from './Components/Auth/Auth';
 import GuestList from './Components/GuestList/GuestList';
 import PublicRoute from './routes/PublicRoute';
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -22,7 +22,7 @@ const App = () => {
         <Route path="/admin/*" element={
           <AuthProvider>
             <Routes>
-              <Route path="login" element={<Login />} />
+              <Route path="auth" element={<Auth />} />
               <Route path="guests" element={
                 <ProtectedRoute>
                   <GuestList />
