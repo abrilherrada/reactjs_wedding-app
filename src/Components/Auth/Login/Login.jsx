@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/Auth/useAuth';
+import Button from '../../Button/Button';
+import styles from '../Auth.module.css';
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
   const { login, loading, error: authError } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!credentials.username || !credentials.password) {
+    if (!credentials.email || !credentials.password) {
       return;
     }
     
@@ -21,41 +23,54 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit} className="login-form">
-        <h2>Iniciar sesión</h2>
-        {authError && <div className="error-message">{authError}</div>}
-        <div className="form-group">
-          <label htmlFor="username">Correo electrónico</label>
+    <div className={styles.card}>
+      <form
+        onSubmit={handleSubmit}
+        className={styles.form}
+      >
+        <h2 className={styles.title}>Iniciar sesión</h2>
+        <div className={styles.fieldGroup}>
+          <label
+            htmlFor="email"
+            className={styles.label}
+          >
+            Correo electrónico
+          </label>
           <input
-            id="username"
+            id="email"
             type="email"
-            placeholder="Ingresá tu correo"
-            value={credentials.username}
-            onChange={(e) => setCredentials(prev => ({ ...prev, username: e.target.value }))}
+            value={credentials.email}
+            onChange={(e) => setCredentials(prev => ({ ...prev, email: e.target.value }))}
             disabled={loading}
             required
+            className={styles.field}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Contraseña</label>
+        <div className={styles.fieldGroup}>
+          <label
+            htmlFor="password"
+            className={styles.label}
+          >
+            Contraseña
+          </label>
           <input
             id="password"
             type="password"
-            placeholder="Ingresá tu contraseña"
             value={credentials.password}
             onChange={(e) => setCredentials(prev => ({ ...prev, password: e.target.value }))}
             disabled={loading}
             required
+            className={styles.field}
           />
         </div>
-        <button 
+        <Button 
           type="submit" 
-          className="login-button"
-          disabled={loading || !credentials.username || !credentials.password}
+          className={styles.authButton}
+          disabled={loading || !credentials.email || !credentials.password}
         >
           {loading ? 'Enviando...' : 'Iniciar sesión'}
-        </button>
+        </Button>
+        {authError && <div className={styles.errorMessage}>{authError}</div>}
       </form>
     </div>
   );

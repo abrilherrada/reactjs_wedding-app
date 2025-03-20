@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { AuthContext } from './AuthContext.js';
-import { login as loginService } from '../../services/auth_services';
+import { login as loginService, signup as signupService } from '../../services/auth_services';
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       
       const data = await loginService({
-        email: credentials.username,
+        email: credentials.email,
         password: credentials.password
       });
       
@@ -33,7 +33,29 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       return true;
     } catch (error) {
-      setError(error.message || 'Login failed');
+      setError(error.message || 'Hubo un error al iniciar sesión');
+      setTimeout(() => setError(null), 5000);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signup = async (userData) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const data = await signupService(userData);
+      
+      // Automatically log in after successful signup
+      localStorage.setItem('authToken', data.token);
+      setToken(data.token);
+      setIsAuthenticated(true);
+      return true;
+    } catch (error) {
+      setError(error.message || 'Hubo un error al crear la cuenta');
+      setTimeout(() => setError(null), 5000);
       return false;
     } finally {
       setLoading(false);
@@ -51,7 +73,8 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider value={{ 
       isAuthenticated, 
       token, 
-      login, 
+      login,
+      signup,
       logout,
       loading,
       error 

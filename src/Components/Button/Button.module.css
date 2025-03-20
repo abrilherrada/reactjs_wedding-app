@@ -14,7 +14,12 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.button:hover {
+.button:hover:not(:disabled) {
   transform: translate(2px, 2px);
   box-shadow: var(--shadow-hover);
+}
+
+.button:disabled {
+  background-color: var(--background-input-unchecked);
+  cursor: not-allowed;
 }
