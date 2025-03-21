@@ -2,36 +2,76 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { AuthContext } from './AuthContext.js';
 import { login as loginService, signup as signupService } from '../../services/auth_services';
+import { jwtDecode } from 'jwt-decode';
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    // Check localStorage for existing token on mount
-    const storedToken = localStorage.getItem('authToken');
-    if (storedToken) {
-      setToken(storedToken);
-      setIsAuthenticated(true);
+  const validateToken = (token) => {
+    try {
+      const decodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+      
+      if (decodedToken.exp < currentTime) {
+        logout();
+        return false;
+      }
+      return true;
+    } catch (error) {
+      setError(error.message || 'Hubo un error al validar la sesión');
+      logout();
+      return false;
     }
+  };
+
+  useEffect(() => {
+    const initializeAuth = () => {
+      const storedToken = localStorage.getItem('authToken');
+      if (storedToken && validateToken(storedToken)) {
+        setToken(storedToken);
+        setIsAuthenticated(true);
+      } else if (storedToken) {
+        localStorage.removeItem('authToken');
+      }
+      setLoading(false);
+    };
+    
+    initializeAuth();
+
+    const validationInterval = setInterval(() => {
+      const currentToken = localStorage.getItem('authToken');
+      if (currentToken) {
+        validateToken(currentToken);
+      }
+    }, 60 * 60 * 1000); // Validate every hour
+
+    return () => {
+      clearInterval(validationInterval);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const login = async (credentials) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const data = await loginService({
         email: credentials.email,
         password: credentials.password
       });
-      
-      localStorage.setItem('authToken', data.token);
-      setToken(data.token);
-      setIsAuthenticated(true);
-      return true;
+
+      if (validateToken(data.token)) {
+        localStorage.setItem('authToken', data.token);
+        setToken(data.token);
+        setIsAuthenticated(true);
+        return true;
+      } else {
+        throw new Error('Token inválido recibido del servidor');
+      }
     } catch (error) {
       setError(error.message || 'Hubo un error al iniciar sesión');
       setTimeout(() => setError(null), 5000);
@@ -45,14 +85,17 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const data = await signupService(userData);
-      
-      // Automatically log in after successful signup
-      localStorage.setItem('authToken', data.token);
-      setToken(data.token);
-      setIsAuthenticated(true);
-      return true;
+
+      if (validateToken(data.token)) {
+        localStorage.setItem('authToken', data.token);
+        setToken(data.token);
+        setIsAuthenticated(true);
+        return true;
+      } else {
+        throw new Error('Token inválido recibido del servidor');
+      }
     } catch (error) {
       setError(error.message || 'Hubo un error al crear la cuenta');
       setTimeout(() => setError(null), 5000);

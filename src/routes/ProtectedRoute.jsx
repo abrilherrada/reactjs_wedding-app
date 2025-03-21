@@ -2,12 +2,17 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/Auth/useAuth';
 import PropTypes from 'prop-types';
+import Spinner from '../Components/Spinner/Spinner';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  
+  if (loading) {
+    return <Spinner />;
+  }
   
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/admin/auth" replace />;
   }
 
   return children;

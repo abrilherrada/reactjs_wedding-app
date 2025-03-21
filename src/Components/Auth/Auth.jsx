@@ -1,10 +1,22 @@
 import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../../context/Auth/useAuth';
+import Spinner from '../Spinner/Spinner';
 import Login from './Login/Login';
 import Signup from './Signup/Signup';
 import styles from './Auth.module.css';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <Spinner/>;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
 
   return (
     <div className={styles.container}>
