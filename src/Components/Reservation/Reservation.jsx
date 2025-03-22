@@ -25,7 +25,7 @@ const Reservation = ({reservationType, onReservationChange}) => {
   const [status, setStatus] = useState({ type: null, message: null });
   const fetchRef = useRef();
 
-  const invitationId = new URLSearchParams(window.location.search).get('invitationId');
+  const invitationId = new URLSearchParams(window.location.search).get('inv');
 
   fetchRef.current = async (shouldSetLoading = true) => {
     if (shouldSetLoading) {
