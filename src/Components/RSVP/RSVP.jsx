@@ -19,7 +19,7 @@ const ERROR_MESSAGES = {
 
 const getInvitationIdFromUrl = () => {
   const params = new URLSearchParams(window.location.search);
-  return params.get('invitationId');
+  return params.get('inv');
 };
 
 const getErrorMessage = (status) => {

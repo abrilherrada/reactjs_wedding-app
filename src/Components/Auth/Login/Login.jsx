@@ -18,7 +18,7 @@ const Login = () => {
     
     const success = await login(credentials);
     if (success) {
-      navigate('/admin/guests');
+      navigate('/admin/dashboard');
     }
   };
 

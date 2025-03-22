@@ -41,7 +41,7 @@ const Signup = () => {
     });
 
     if (success) {
-      navigate('/admin/guests');
+      navigate('/admin/dashboard');
     }
   };
 
@@ -169,7 +169,7 @@ const Signup = () => {
               htmlFor="weddingName"
               className={styles.label}
             >
-              Nombre de la boda (opcional)
+              Nombre de los novios
             </label>
             <input
               id="weddingName"

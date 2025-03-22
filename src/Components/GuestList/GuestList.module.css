@@ -1,0 +1,258 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  color: var(--text);
+  padding: 1.5rem 1rem;
+}
+
+.title {
+  font-family: "Staatliches", serif;
+  font-size: 2.5rem;
+  margin: 0;
+  line-height: 1;
+}
+
+.messageContainer {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.messageGroup {
+  width: 100%;
+  min-width: 300px;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.messageGroup label {
+  font-family: "Staatliches", sans-serif;
+  color: var(--text);
+  font-size: 1.5rem;
+}
+
+.messageInput {
+  font-family: "Cutive", serif;
+  font-size: 1rem;
+  color: #666;
+  width: 100%;
+  max-width: 344px;
+  padding: 1rem;
+  border-radius: 5px;
+  border: 2px solid #666;
+  background-color: var(--background-container);
+}
+
+.messageInfo {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+}
+
+.infoTitle {
+  font-family: "Staatliches", sans-serif;
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.infoList {
+  margin: 0;
+  list-style-type: none;
+}
+
+.infoItem::marker {
+  content: "🖤  ";
+  font-size: 0.9rem;
+}
+
+.infoItem {
+  font-family: "Cutive", serif;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.infoVariable {
+  font-weight: bold;
+}
+
+.tableContainer {
+  width: 100%;
+  min-width: 600px;
+  max-width: 1200px;
+  border-radius: 5px;
+  border: var(--border);
+  box-shadow: var(--shadow-primary);
+  background-color: var(--background-container);
+  margin-top: 2rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table tr {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 2.5fr 0.6fr 1.4fr;
+}
+
+.table thead,
+.table tbody {
+  display: table-row-group;
+}
+
+.table th,
+.table td {
+  padding: 1rem;
+  border-bottom: var(--border);
+  min-width: 0;
+  word-wrap: break-word;
+}
+
+.table th {
+  font-family: "Staatliches", sans-serif;
+  font-size: 1.25rem;
+  background-color: var(--text);
+  color: var(--background-container);
+  text-align: center;
+}
+
+.table td {
+  font-family: "Cutive", serif;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.sentRow {
+  background-color: rgba(59, 168, 132, 0.25);
+  transition: background-color 0.3s ease;
+}
+
+.guestList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0 0 0 1.5rem;
+}
+
+.guestList li {
+  margin-bottom: 0.5rem;
+}
+
+.guestList li::marker {
+  content: "🖤  ";
+  font-size: 0.8rem;
+}
+
+.guestList li:last-child {
+  margin-bottom: 0;
+}
+
+.preview {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.sentCheckbox {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+}
+
+.sentCheckbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: var(--border);
+  box-shadow: var(--shadow-primary);
+  background-color: var(--background-container);
+  transition: all 0.3s;
+}
+
+.sentCheckbox input:checked ~ .checkmark {
+  background-color: #3BA884;
+}
+
+.checkmark:after {
+  content: "";
+  width: 5px;
+  height: 10px;
+  position: absolute;
+  top: 2px;
+  left: 7px;
+  display: none;
+  border: solid var(--background-container);
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+}
+
+.sentCheckbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.whatsappButton,
+.chatButton {
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.whatsappButton {
+  background-color: #46D756;
+  
+}
+
+.chatButton {
+  background-color: #3BA884;
+}
+
+@media (max-width: 379px) {
+  .container {
+      padding: 1rem 0.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+      padding: 1.5rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+      padding: 2rem;
+  }
+}
