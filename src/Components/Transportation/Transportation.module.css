@@ -3,12 +3,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: var(--text);
 }
 
 .title {
   font-family: "Staatliches", serif;
   font-size: 2rem;
-  color: var(--text);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,7 +30,6 @@
 .paragraph {
   font-family: "Cutive", serif;
   font-size: 1rem;
-  color: var(--text);
   text-align: justify;
   margin: 1rem 0 0 0;
 }
@@ -74,13 +73,11 @@
 .listItemTitle {
   font-family: "Staatliches", serif;
   font-size: 1.25rem;
-  color: var(--text);
 }
 
 .listItemText {
   font-family: "Cutive", serif;
   font-size: 1rem;
-  color: var(--text);
 }
 
 .readMoreButton {
@@ -90,7 +87,6 @@
 
 .arrow {
   transition: transform 0.5s ease;
-  color: var(--text);
 }
 
 .arrowUp {
