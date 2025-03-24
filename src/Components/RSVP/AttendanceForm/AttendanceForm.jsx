@@ -133,6 +133,13 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, onError, isModif
   const [state, dispatch] = useReducer(formReducer, guestInfo, createInitialState);
   const [anyAttending, setAnyAttending] = useState(false);
   const [originalFormData, setOriginalFormData] = useState(null);
+  const [charCounts, setCharCounts] = useState({
+    dietaryRestrictionsInGroup: 0,
+    songRequest: 0,
+    additionalNotes: 0
+  });
+  const MAX_CHARS = 500;
+  const WARNING_THRESHOLD = 400;
 
   // Update form data when guestInfo changes
   useEffect(() => {
@@ -160,6 +167,15 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, onError, isModif
     
     setAnyAttending(isAnyoneAttending);
   }, [state.formData, guestInfo.hasCompanion, guestInfo.hasChildren]);
+
+  // Actualizar contadores de caracteres cuando cambia el formulario
+  useEffect(() => {
+    setCharCounts({
+      dietaryRestrictionsInGroup: state.formData.dietaryRestrictionsInGroup?.length || 0,
+      songRequest: state.formData.songRequest?.length || 0,
+      additionalNotes: state.formData.additionalNotes?.length || 0
+    });
+  }, [state.formData]);
 
   // Función para verificar si hubo cambios en el formulario
   const checkForChanges = () => {
@@ -440,7 +456,11 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, onError, isModif
                 value={state.formData.dietaryRestrictionsInGroup}
                 onChange={handleInputChange('dietaryRestrictionsInGroup')}
                 placeholder={!guestInfo.hasCompanion && !guestInfo.hasChildren ? "Indicanos si tenés alguna restricción alimentaria." : "Indicanos si alguien del grupo tiene alguna restricción alimentaria."}
+                maxLength={MAX_CHARS}
               />
+              <div className={`${styles.charCounter} ${charCounts.dietaryRestrictionsInGroup >= WARNING_THRESHOLD ? styles.warning : ''}`}>
+                {charCounts.dietaryRestrictionsInGroup}/{MAX_CHARS} caracteres
+              </div>
             </div>
         : null
         }
@@ -452,7 +472,11 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, onError, isModif
             value={state.formData.songRequest}
             onChange={handleInputChange('songRequest')}
             placeholder="¡Ayudanos a armar la playlist!"
+            maxLength={MAX_CHARS}
           />
+          <div className={`${styles.charCounter} ${charCounts.songRequest >= WARNING_THRESHOLD ? styles.warning : ''}`}>
+            {charCounts.songRequest}/{MAX_CHARS} caracteres
+          </div>
         </div>
 
         <div className={styles.inputGroup}>
@@ -462,7 +486,11 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, onError, isModif
             value={state.formData.additionalNotes}
             onChange={handleInputChange('additionalNotes')}
             placeholder="¿Hay algo más que quieras agregar?"
+            maxLength={MAX_CHARS}
           />
+          <div className={`${styles.charCounter} ${charCounts.additionalNotes >= WARNING_THRESHOLD ? styles.warning : ''}`}>
+            {charCounts.additionalNotes}/{MAX_CHARS} caracteres
+          </div>
         </div>
 
         <div className={styles.buttonContainer}>
