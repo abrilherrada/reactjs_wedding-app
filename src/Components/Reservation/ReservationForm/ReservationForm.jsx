@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useReducer } from 'react';
 import { getRSVPInfo } from '../../../services/rsvp_services';
-import { getAvailability, createReservation, updateReservation } from '../../../services/reservation_services';
+import { getAvailability, createReservation, updateReservation, deleteReservation } from '../../../services/reservation_services';
 import PropTypes from 'prop-types';
 import Button from '../../Button/Button';
 import Modal from '../../Modal/Modal';
@@ -9,17 +9,11 @@ import WarningIcon from '../../../assets/icons/WarningIcon';
 import styles from './ReservationForm.module.css';
 
 const ERROR_MESSAGES = {
-  NO_INVITATION_ID: 'Para poder hacer una reserva, usá el enlace que te enviamos por WhatsApp.',
-  INVALID_INVITATION: 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por WhatsApp.',
-  NO_AVAILABILITY: 'Ya no hay lugares disponibles. ☹️',
-  FETCH_ERROR: 'Hubo un error al cargar la información. Tocá el botón para intentar de nuevo.',
   AVAILABILITY_ERROR: 'Hubo un error al consultar la disponibilidad. Tocá el botón para intentar de nuevo.',
-  SPOTS_TAKEN: 'Pestañaste. Alguien más se quedó con los últimos lugares. 🫠'
+  NO_AVAILABILITY: 'Ya no hay lugares disponibles. ☹️',
+  SPOTS_TAKEN: 'Pestañaste. Alguien más se quedó con los últimos lugares. 🫠',
+  EMPTY_SELECTION: 'Para poder continuar, tenés que marcar las personas para las cuales querés hacer la reserva.'
 };
-
-const hasConfirmedAttendance = (guest) => guest.attending === true;
-const hasDeclinedAttendance = (guest) => guest.attending === false;
-const hasPendingResponse = (guest) => guest.attending === null;
 
 const ACTIONS = {
   SET_FORM_DATA: 'SET_FORM_DATA',
@@ -28,6 +22,8 @@ const ACTIONS = {
   SET_STATUS: 'SET_STATUS',
   TOGGLE_CONFIRM_MODAL: 'TOGGLE_CONFIRM_MODAL',
   TOGGLE_EMPTY_MODAL: 'TOGGLE_EMPTY_MODAL',
+  TOGGLE_CANCEL_MODAL: 'TOGGLE_CANCEL_MODAL',
+  TOGGLE_NO_CHANGES_MODAL: 'TOGGLE_NO_CHANGES_MODAL',
   RESET_STATUS: 'RESET_STATUS'
 };
 
@@ -36,7 +32,7 @@ const createInitialState = (guestInfo, existingReservation = null) => {
     guestInfo.mainGuest,
     ...(guestInfo.hasCompanion ? [guestInfo.companion] : []),
     ...(guestInfo.hasChildren ? guestInfo.children : [])
-  ].filter(hasConfirmedAttendance) : [];
+  ].filter(guest => guest.attending === true) : [];
 
   const mappedGuests = guests.map(guest => ({
     ...guest,
@@ -57,6 +53,8 @@ const createInitialState = (guestInfo, existingReservation = null) => {
     submitting: false,
     showConfirmModal: false,
     showEmptyModal: false,
+    showCancelModal: false,
+    showNoChangesModal: false,
     status: { type: null, message: null }
   };
 };
@@ -109,6 +107,16 @@ const formReducer = (state, action) => {
         ...state,
         showEmptyModal: action.payload
       };
+    case ACTIONS.TOGGLE_CANCEL_MODAL:
+      return {
+        ...state,
+        showCancelModal: action.payload
+      };
+    case ACTIONS.TOGGLE_NO_CHANGES_MODAL:
+      return {
+        ...state,
+        showNoChangesModal: action.payload
+      };
     case ACTIONS.RESET_STATUS:
       return {
         ...state,
@@ -125,6 +133,9 @@ const ReservationForm = ({
   onClose,
   onRetry,
   onSuccess,
+  onCancelSuccess,
+  onCancelError,
+  onError,
   isModifying = false,
   reservation = null
 }) => {
@@ -141,13 +152,7 @@ const ReservationForm = ({
   // Effect for fetching initial data
   useEffect(() => {
     if (!invitationId) {
-      dispatch({
-        type: ACTIONS.SET_STATUS,
-        payload: {
-          type: 'error',
-          message: ERROR_MESSAGES.NO_INVITATION_ID
-        }
-      });
+      onError?.('INVALID_INVITATION');
       setLoading(false);
       return;
     }
@@ -174,22 +179,27 @@ const ReservationForm = ({
           });
         }
       } catch (error) {
-        dispatch({
-          type: ACTIONS.SET_STATUS,
-          payload: {
-            type: 'error',
-            message: error.status === 404 
-              ? ERROR_MESSAGES.INVALID_INVITATION
-              : ERROR_MESSAGES.FETCH_ERROR
-          }
-        });
+        // Si el error es de invitación (400 o 404), propagar al padre
+        if (error.status === 400 || error.status === 404 || 
+            error.response?.status === 400 || error.response?.status === 404) {
+          onError?.('INVALID_INVITATION');
+        } else {
+          // Si el error es de getAvailability, manejarlo localmente
+          dispatch({
+            type: ACTIONS.SET_STATUS,
+            payload: {
+              type: 'error',
+              message: ERROR_MESSAGES.AVAILABILITY_ERROR
+            }
+          });
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchInitialData();
-  }, [invitationId, reservationType]);
+  }, [invitationId, reservationType, onError]);
 
   // Effect for updating availability info when reservations change
   useEffect(() => {
@@ -236,9 +246,9 @@ const ReservationForm = ({
       ...(guestInfo.hasChildren ? guestInfo.children : [])
     ];
     
-    const attending = guests.filter(hasConfirmedAttendance);
-    const notAttending = guests.filter(hasDeclinedAttendance);
-    const pending = guests.filter(hasPendingResponse);
+    const attending = guests.filter(guest => guest.attending === true);
+    const notAttending = guests.filter(guest => guest.attending === false);
+    const pending = guests.filter(guest => guest.attending === null);
     
     return {
       attending,
@@ -277,6 +287,50 @@ const ReservationForm = ({
     )
   }, [formState.formData.guests]);
 
+  const checkForChanges = () => {
+    if (!isModifying) {
+      return formState.formData.guests.some(guest => guest.selected);
+    }
+
+    const currentGuests = formState.formData.guests
+      .filter(guest => guest.selected)
+      .map(guest => guest.name)
+      .sort();
+    const originalGuests = reservation.guests.sort();
+
+    const guestsChanged = currentGuests.length !== originalGuests.length ||
+      currentGuests.some((guest, index) => guest !== originalGuests[index]);
+
+    const adultsChanged = formState.formData.adults !== reservation.adults;
+    const childrenChanged = formState.formData.children !== reservation.children;
+
+    return guestsChanged || adultsChanged || childrenChanged;
+  };
+
+  const handleConfirmClick = () => {
+    const hasSelectedGuests = formState.formData.guests.some(guest => guest.selected);
+    
+    // Si estamos modificando una reserva existente y no hay invitados seleccionados, mostrar modal de cancelación
+    if (isModifying && !hasSelectedGuests) {
+      dispatch({ type: ACTIONS.TOGGLE_CANCEL_MODAL, payload: true });
+      return;
+    }
+
+    // Verificar si hay invitados seleccionados (para nuevas reservas)
+    if (!hasSelectedGuests) {
+      dispatch({ type: ACTIONS.TOGGLE_EMPTY_MODAL, payload: true });
+      return;
+    }
+
+    // Verificar si hay cambios
+    if (!checkForChanges()) {
+      dispatch({ type: ACTIONS.TOGGLE_NO_CHANGES_MODAL, payload: true });
+      return;
+    }
+
+    dispatch({ type: ACTIONS.TOGGLE_CONFIRM_MODAL, payload: true });
+  };
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -298,27 +352,40 @@ const ReservationForm = ({
       
       onSuccess(response);
     } catch (error) {
-      dispatch({
-        type: ACTIONS.SET_STATUS,
-        payload: { 
-          type: 'error', 
-          message: error.status === 409
-            ? ERROR_MESSAGES.SPOTS_TAKEN 
-            : ERROR_MESSAGES.FETCH_ERROR
-        }
-      });
+      // Manejar error de spots tomados localmente
+      if (error.status === 409) {
+        dispatch({
+          type: ACTIONS.SET_STATUS,
+          payload: { 
+            type: 'error',
+            message: ERROR_MESSAGES.SPOTS_TAKEN
+          }
+        });
+      } else {
+        // Propagar otros errores al padre
+        onError?.(isModifying ? 'UPDATE_ERROR' : 'CREATE_ERROR');
+      }
     } finally {
       dispatch({ type: ACTIONS.SET_SUBMITTING, payload: false });
       dispatch({ type: ACTIONS.TOGGLE_CONFIRM_MODAL, payload: false });
     }
   };
 
-  const handleConfirmClick = () => {
-    const hasSelectedGuests = formState.formData.guests.some(guest => guest.selected);
-    dispatch({ 
-      type: hasSelectedGuests ? ACTIONS.TOGGLE_CONFIRM_MODAL : ACTIONS.TOGGLE_EMPTY_MODAL, 
-      payload: true 
-    });
+  // Handle reservation cancellation
+  const handleCancel = async () => {
+    dispatch({ type: ACTIONS.SET_SUBMITTING, payload: true });
+    dispatch({ type: ACTIONS.RESET_STATUS });
+    
+    try {
+      await deleteReservation(invitationId, reservationType);
+      onCancelSuccess();
+    } catch (error) {
+      console.error('Error canceling reservation:', error);
+      onCancelError();
+    } finally {
+      dispatch({ type: ACTIONS.SET_SUBMITTING, payload: false });
+      dispatch({ type: ACTIONS.TOGGLE_CANCEL_MODAL, payload: false });
+    }
   };
 
   const renderContent = () => {
@@ -483,8 +550,29 @@ const ReservationForm = ({
             <Modal
               isOpen={formState.showEmptyModal}
               title="La reserva está vacía"
-              message="Para poder continuar, tenés que marcar las personas para las cuales querés hacer la reserva."
+              message={ERROR_MESSAGES.EMPTY_SELECTION}
               onCancel={() => dispatch({ type: ACTIONS.TOGGLE_EMPTY_MODAL, payload: false })}
+            />
+          )}
+
+          {formState.showCancelModal && (
+            <Modal
+              isOpen={formState.showCancelModal}
+              title="Cancelar reserva"
+              message={`¿Estás seguro de que querés cancelar la reserva${reservationType === 'lodging' ? ' de alojamiento' : (reservationType === 'transportation' ? ' de transporte' : '')}?`}
+              confirmText={formState.submitting ? 'Enviando...' : 'Sí, cancelar'}
+              cancelText="No, volver"
+              onConfirm={handleCancel}
+              onCancel={() => dispatch({ type: ACTIONS.TOGGLE_CANCEL_MODAL, payload: false })}
+            />
+          )}
+
+          {formState.showNoChangesModal && (
+            <Modal
+              isOpen={formState.showNoChangesModal}
+              title="No hay cambios"
+              message="La reserva no tuvo modificaciones. Si querés hacer cambios, modificá la selección de invitados."
+              onCancel={() => dispatch({ type: ACTIONS.TOGGLE_NO_CHANGES_MODAL, payload: false })}
             />
           )}
         </>
@@ -499,6 +587,9 @@ ReservationForm.propTypes = {
   onClose: PropTypes.func.isRequired,
   onRetry: PropTypes.func.isRequired,
   onSuccess: PropTypes.func.isRequired,
+  onCancelSuccess: PropTypes.func.isRequired,
+  onCancelError: PropTypes.func.isRequired,
+  onError: PropTypes.func,
   isModifying: PropTypes.bool,
   reservation: PropTypes.object
 };
