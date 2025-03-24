@@ -21,7 +21,7 @@ const EventInfo = () => {
           <article className={styles.infoSection}>
             <p>
               <span className={styles.infoTitle}>Fecha:&nbsp;</span>
-              <span className={styles.infoText}>30/08/25</span>
+              <span className={styles.infoText}>30 de agosto de 2025</span>
             </p>
             <p>
               <span className={styles.infoTitle}>Hora:&nbsp;</span>
