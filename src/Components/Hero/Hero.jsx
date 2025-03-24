@@ -11,8 +11,8 @@ const Hero = () => {
       <ErrorBoundary>
         <div className={styles.content}>
           <div className={styles.hero}>
-            <h1 className={styles.headline}>¡EXTRA, EXTRA!</h1>
             <div className={styles.imageContainer}>
+              <h1 className={styles.headline}>¡EXTRA, EXTRA!</h1>
               <img 
                 src="/images/hero.jpg" 
                 alt="Abril y Juan" 
