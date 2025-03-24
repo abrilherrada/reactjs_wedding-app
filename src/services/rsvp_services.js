@@ -14,7 +14,8 @@ export const getRSVPInfo = async (invitationId) => {
     return data.invitation || data; // Handle both formats for backward compatibility
   } catch (error) {
     const customError = new Error();
-    customError.status = error.status || 500;
+    customError.status = error.status || (error.response?.status) || 500;
+    customError.response = error;
     throw customError;
   }
 };
@@ -51,7 +52,7 @@ export const updateRSVPStatus = async (updateData) => {
     return data.invitation || data; // Handle both formats for backward compatibility
   } catch (error) {
     const customError = new Error('Error al actualizar la invitación');
-    customError.status = error.status || 500;
+    customError.status = error.status || (error.response?.status) || 500;
     customError.response = error;
     throw customError;
   }
