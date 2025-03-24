@@ -14,17 +14,35 @@ const PaymentMethod = () => {
               <div className={styles.option}>
                 <h5>En pesos</h5>
                 <ul className={styles.list}>
-                  <li className={styles.item}>CBU: 0123456789012345678901</li>
-                  <li className={styles.item}>Alias: ABRIL.HERRADA</li>
-                  <li className={styles.item}>Titular: Abril Herrada Galvagni</li>
+                  <li className={styles.item}>
+                    <p className={styles.subtitle}>CBU:</p>
+                    <p>4530000800016248916900</p>
+                  </li>
+                  <li className={styles.item}>
+                    <p className={styles.subtitle}>Alias:</p>
+                    <p>AHERRADAGALVA.NX.ARS</p>
+                  </li>
+                  <li className={styles.item}>
+                    <p className={styles.subtitle}>Titular:</p>
+                    <p>Abril Herrada Galvagni</p>
+                  </li>
                 </ul>
               </div>
               <div className={styles.option}>
                 <h5>En dólares</h5>
                 <ul className={styles.list}>
-                  <li className={styles.item}>CBU: 0123456789012345678901</li>
-                  <li className={styles.item}>Alias: ABRIL.HERRADA</li>
-                  <li className={styles.item}>Titular: Abril Herrada Galvagni</li>
+                  <li className={styles.item}>
+                    <p className={styles.subtitle}>CBU:</p>
+                    <p>4530000800023684422902</p>
+                  </li>
+                  <li className={styles.item}>
+                    <p className={styles.subtitle}>Alias:</p>
+                    <p>AHERRADAGALVA.NX.USD</p>
+                  </li>
+                  <li className={styles.item}>
+                    <p className={styles.subtitle}>Titular:</p>
+                    <p>Abril Herrada Galvagni</p>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -35,9 +53,7 @@ const PaymentMethod = () => {
               <div className={styles.option}>
                 <h5>Cuenta de USA</h5>
                 <ul className={styles.list}>
-                  <li className={styles.item}>Número de cuenta: 012345678901</li>
-                  <li className={styles.item}>Numero de ruta: 012345678</li>
-                  <li className={styles.item}>Tipo de cuenta: Cuenta de cheques</li>
+                  <li className={styles.item}>Consultar por privado</li>
                 </ul>
               </div>
               <div className={styles.option}>

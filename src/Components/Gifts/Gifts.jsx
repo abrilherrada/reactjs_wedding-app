@@ -18,7 +18,7 @@ const Gifts = () => {
         <div className={styles.content}>
           <p className={styles.description}>El mejor regalo es tu presencia. No hace falta nada más. En serio.</p>
           <div className={`${styles.expandableContent} ${isExpanded ? styles.expanded : ''}`}>
-            <p className={styles.description}>¿Cómo? ¿Que no vas a aceptar un &quot;no&quot; como respuesta? Bueno, está bien, si insistís... Si querés regalarnos algo, podés regalarnos un pedacito de nuestra luna de miel. ¡Nos vamos a ir a Japón!</p>
+            <p className={styles.description}>¿Cómo? ¿Que no vas a aceptar un &quot;no&quot; como respuesta? Bueno, está bien, si insistís... Si querés regalarnos algo, podés regalarnos un pedacito de nuestra luna de miel. ¡Nos vamos a Japón!</p>
             <p className={styles.description}>¿Qué nos podés regalar para un viaje a Japón? Te dejamos algunas ideas.</p>
             <div className={styles.giftsGrid}>
               {data.map((gift, index) => (

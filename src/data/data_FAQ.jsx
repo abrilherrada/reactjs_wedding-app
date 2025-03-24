@@ -6,7 +6,7 @@ const data = [
         question: '¿Cómo confirmo si voy o no voy?',
         answer: (
           <p>
-            Facilísimo: andá a la sección <a href="#rsvp">Confirmación de asistencia</a> de esta página y seguí los pasos hasta que te aparezca un mensaje de confirmación verde. Te pedimos que nos avises lo antes posible, ya sea que vengas o no, para poder organizarnos con tiempo. Y no te preocupes si cambiás de opinión más adelante; podés modificar tu respuesta hasta el <strong>30 de julio de 2025</strong>.
+            Facilísimo: andá a la sección <a href="#rsvp">Confirmación de asistencia</a> de esta página y seguí los pasos hasta que te aparezca un mensaje de confirmación verde. Te pedimos que nos avises lo antes posible, ya sea que vengas o no, para poder organizarnos con tiempo. Y no te preocupes si cambiás de opinión más adelante; podés modificar tu respuesta hasta el <u>30 de julio de 2025</u>.
           </p>
         )
       },
@@ -22,23 +22,10 @@ const data = [
         question: '¿Puedo llevar un acompañante?',
         answer: (
           <p>
-            Aunque nos encantaría invitar a todo el mundo, nuestro presupuesto tiene un límite. Por eso, <strong>solo pueden venir las personas indicadas en tu invitación</strong>. Podés fijarte quiénes están incluidos en tu grupo en el mensaje que te enviamos por WhatsApp (con el enlace a esta página) y en el formulario de asistencia de la sección <a href="#rsvp">Confirmación de asistencia</a>.
+            Aunque nos encantaría invitar a todo el mundo, nuestro presupuesto tiene un límite. Por eso, <u>solo pueden venir las personas indicadas en tu invitación</u>. Podés fijarte quiénes están incluidos en tu grupo en el mensaje que te enviamos por WhatsApp (con el enlace a esta página) y en el formulario de asistencia de la sección <a href="#rsvp">Confirmación de asistencia</a>.
           </p>
         )
-      },
-      {
-        question: '¿Pueden asistir niños?',
-        answer: (
-          <>
-            <p>
-            ¡Sí, los niños son más que bienvenidos! Los incluimos en las invitaciones que enviamos. Sin embargo, sabemos que tal vez prefieras venir solo para relajarte y disfrutar. ¡Vos elegís lo que sea mejor para tu familia!
-            </p>
-            <p>
-              Tené en cuenta que el lugar está en un predio grande con bosque, una pileta artificial y cerca de un río, así que es ideal mantener a los peques vigilados. Si vienen más de 6 niños (entre 2 y 12 años), habrá una niñera para cuidarlos durante el evento.
-            </p>
-          </>
-        )
-      },
+      }
     ]
   },
   {
@@ -48,7 +35,7 @@ const data = [
         question: '¿Hay que pagar tarjeta?',
         answer: (
           <p>
-            ¡No te preocupes por eso! La comida y bebida corren por nuestra cuenta. Solo tenés que venir y disfrutar.
+            No, la fiesta corre por nuestra cuenta. Solo tenés que venir y disfrutar.
           </p>
         )
       },
@@ -56,7 +43,7 @@ const data = [
         question: '¿Tengo que llevar un regalo?',
         answer: (
           <p>
-            El mejor regalo es que vengas y compartas este día con nosotros. Pero, si querés hacernos un mimo extra, podés ayudarnos con nuestra luna de miel (¡nos vamos a Japón!). Si querés colaborar, en la sección <a href="#gifts">Regalos</a> de esta página vas a encontrar varias opciones.
+            El mejor regalo es que vengas y compartas este día con nosotros. Pero, si querés regalarnos algo, podés regalarnos un pedacito de nuestra luna de miel (¡nos vamos a Japón!). Fijate cómo hacerlo en la sección <a href="#gifts">Regalos</a> de esta página.
           </p>
         )
       },
@@ -83,7 +70,6 @@ const data = [
                 La temperatura promedio en esa fecha y ese horario es de 14°C a 21°C.
               </li>
             </ul>
-            <p>¡Un look cómodo siempre es una buena idea!</p>
           </>
         )
       },
@@ -120,7 +106,7 @@ const data = [
         question: '¿Hay que ir a más de un lugar? ¿Van a tener una ceremonia religiosa?',
         answer: (
           <p>
-            No. Nada de complicaciones: <strong>todo pasa en un solo lugar</strong>. La ceremonia civil se hace en el salón (Estancia El Rosal) y no hay ceremonia religiosa. ¡Todo en un solo evento, sin traslados extra!
+            No. Nada de complicaciones: <u>todo pasa en un solo lugar</u>. La ceremonia civil se hace en el salón (Estancia El Rosal) y no hay ceremonia religiosa. ¡Todo en un solo evento, sin traslados extra!
           </p>
         )
       },
@@ -128,7 +114,7 @@ const data = [
         question: '¿Cómo obtengo la ubicación del salón?',
         answer: (
           <p>
-            La ubicación exacta está en la sección <a href="#info">Información del evento</a> de esta página. ¡Usá ese enlace, porque Google también muestra otro lugar con el mismo nombre que está a 20 minutos del salón!
+            La ubicación exacta está en la sección <a href="#info">Información del evento</a> de esta página. Usá ese enlace, porque Google también muestra otro lugar con el mismo nombre que está a 20 minutos del salón.
           </p>
         )
       },
@@ -149,7 +135,7 @@ const data = [
         question: '¿Qué hago si tengo una dieta especial?',
         answer: (
           <p>
-            Si tenés alguna restricción alimentaria o seguís una dieta especial (por ejemplo, una dieta vegana), te pedimos que nos lo aclares en el campo <strong>Restricciones alimentarias</strong> del formulario de asistencia que se encuentra en la sección <a href="#rsvp">Confirmación de asistencia</a>, así te gestionamos un plato que se adapte a tus necesidades.
+            Si tenés alguna restricción alimentaria o seguís una dieta especial (por ejemplo, una dieta vegana), te pedimos que nos lo aclares en el campo <u>Restricciones alimentarias</u> del formulario de asistencia que se encuentra en la sección <a href="#rsvp">Confirmación de asistencia</a>, así te gestionamos un plato que se adapte a tus necesidades.
           </p>
         )
       },
@@ -158,10 +144,10 @@ const data = [
         answer: (
           <>
             <p>
-              Habrá barra libre de bebidas alcohólicas con muchas opciones para elegir. Eso sí, si pensás tomar y te alojás en la Ciudad de Córdoba, recordá que <strong>es muy probable que haya controles de alcoholemia</strong>. Mejor organizate para tener un conductor designado o usá otra opción de traslado.
+              Habrá barra libre de bebidas alcohólicas con muchas opciones para elegir. Eso sí, si pensás tomar y te alojás en la Ciudad de Córdoba, recordá que <u>es muy probable que haya controles de alcoholemia</u>. Mejor organizate para tener un conductor designado o usá otra opción de traslado.
             </p>
             <p>
-              Para los que prefieran no tomar alcohol, además de agua y gaseosas, habrá limonadas y smoothies riquísimos.
+              Para los que prefieran no tomar alcohol, además de agua y gaseosas, habrá limonada y smoothies riquísimos.
           </p>
           </>
         )
@@ -175,7 +161,7 @@ const data = [
         question: '¿Dónde me puedo alojar?',
         answer: (
             <p>
-              Si venís de visita para el casamiento, tenés varias alternativas de alojamiento. Para orientarte, hicimos la sección <a href="#lodging">Opciónes de alojamiento</a>, que contiene algunas recomendaciones e información sobre cada opción.
+              Si venís de visita para el casamiento, tenés varias alternativas de alojamiento. Para orientarte, hicimos la sección <a href="#lodging">Opciones de alojamiento</a>, que contiene algunas recomendaciones e información sobre cada opción.
             </p>
         )
       },

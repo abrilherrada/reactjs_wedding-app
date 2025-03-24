@@ -1,7 +1,10 @@
 .heroContainer {
   width: 100%;
   color: var(--text);
-  padding-top: 6rem;
+}
+
+.hero {
+  width: 100%;
 }
 
 .headline {
@@ -9,12 +12,14 @@
   font-size: clamp(3.5rem, 18vw, 10rem);
   text-align: center;
   line-height: 1;
-  margin: 0 0 1rem 0;
+  margin: 0;
+  padding-top: 6rem;
   letter-spacing: 1px;
 }
 
 .imageContainer {
   width: 100%;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,12 +28,11 @@
 
 .heroImage {
   width: 95%;
-  max-width: 1190px;
   height: auto;
   border-radius: 5px;
   border: var(--border);
   box-shadow: var(--shadow-primary);
-  filter: grayscale(100%);
+  filter: sepia(30%);
 }
 
 .imageCaption {
@@ -42,6 +46,7 @@
 
 .articleContent {
   padding: 1.5rem 1rem;
+  max-width: 1190px;
 }
 
 .articleHeadline {
@@ -60,7 +65,7 @@
 }
 
 .articleText p {
-  margin-block-end: 0;
+  margin: 1rem 0 0 0;
 }
 
 .expandableContent {
@@ -87,7 +92,6 @@
   transform: rotate(180deg);
 }
 
-
 @media (min-width: 768px) {
   .imageCaption {
     font-size: 1rem;
@@ -102,12 +106,20 @@
   }
 }
 
+@media (min-width: 900px) {
+  .heroImage {
+    max-height: 640px;
+    width: auto;
+  }
+}
+
 @media (min-width: 1024px) {
   .articleContent {
     padding: 2rem;
+    margin: 0 auto;
   }
 
   .articleText p {
-    margin-block-start: 1.5em;
+    margin: 1.25rem 0 0 0;
   }
 }

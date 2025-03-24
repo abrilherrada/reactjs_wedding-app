@@ -29,12 +29,12 @@ const Lodging = () => {
           {!isTextHidden && (
             <>
               <h3>En el salón</h3>
-              <p className={styles.paragraph}>El salón cuenta con alojamiento propio, que podemos usar la noche del evento (30 de agosto de 2025).</p>
+              <p className={styles.paragraph}>El salón cuenta con alojamiento propio, de estilo rústico (porque es un edificio antigüo), que podemos usar la noche del evento (30 de agosto de 2025).</p>
               <div className={`${styles.expandableContent} ${expandedSections.venue ? styles.expanded : ''}`}>
-                <p className={styles.paragraph}>El precio aproximado es de $40.000 por persona por noche. Este precio varia según la cantidad total de personas que decidan quedarse y la fecha de pago.</p>
-                <p className={styles.paragraph}>Hay 66 lugares disponibles, asi que, si elegís esta opción, es necesario que nos avises cuanto antes. Para hacerlo, tocá el botón que se encuentra abajo.</p>
-                <p className={styles.paragraph}>Por ahora, solo hay disponibilidad para la noche del evento. Mas cerca de la fecha vamos a saber si se puede ir desde el día anterior (29 de agosto).</p>
-                <p className={styles.paragraph}>Nosotros nos vamos a quedar ahí. Nuestra idea es pasar la mañana siguiente con los que se queden para aprovechar su visita al máximo.</p>
+                <p className={styles.paragraph}>El precio aproximado es de $40.000-$45.000 por persona por noche. Este precio puede variar según la cantidad total de personas que decidan quedarse y la fecha en que se pague.</p>
+                <p className={styles.paragraph}>Los lugares son limitados, así que, si elegís esta opción, es necesario que nos avises cuanto antes. Para hacerlo, tocá el botón &quot;Reservar alojamiento&quot;, que está abajo.</p>
+                <p className={styles.paragraph}>Por ahora, solo hay disponibilidad para la noche del evento. Más cerca de la fecha vamos a saber si se puede ir desde el día anterior (29 de agosto).</p>
+                <p className={styles.paragraph}>Nosotros nos vamos a quedar ahí. Nuestra idea es desayunar la mañana siguiente con los que se queden para aprovechar su visita al máximo.</p>
               </div>
               <Button 
                 onClick={() => setExpandedSections(prev => ({ ...prev, venue: !prev.venue }))}
@@ -72,9 +72,9 @@ const Lodging = () => {
         </article>
         <article className={styles.card}>
           <h3>En localidades cercanas al salón</h3>
-          <p className={styles.paragraph}>Si bien son limitadas, hay algunas opciones de alojamiento en Agua de Oro, Salsipuedes, La Granja, Villa Cerro Azul, entre otros. Si elegís quedarte por esa zona, tenés el beneficio de estar cerca del salón, por lo que podrías llegar en taxi sin problemas. Por otro lado, si vas a venir varios días, no hay tanto para hacer como en la Ciudad de Córdoba.</p>
+          <p className={styles.paragraph}>Si bien son limitadas, hay algunas opciones de alojamiento en Agua de Oro, Salsipuedes, La Granja y Villa Cerro Azul, entre otras. Si elegís quedarte por esa zona, tenés el beneficio de estar cerca del salón, por lo que podrías llegar en taxi sin problemas. Por otro lado, si vas a venir varios días, no hay tanto para hacer como en la Ciudad de Córdoba.</p>
           <div className={`${styles.expandableContent} ${expandedSections.nearby ? styles.expanded : ''}`}>
-            <p className={styles.paragraph}>Estas son algunas de las opciones que encontramos:</p>
+            <p className={styles.paragraph}>Estas son algunas de las opciones de alojamiento que encontramos:</p>
             <h4>Booking</h4>
             <ul className={styles.list}>
               <li>
@@ -84,38 +84,8 @@ const Lodging = () => {
                   rel="noopener noreferrer"
                   className={styles.link}
                 >
-                  La Pasionaria Casa de Campo (hasta 6 personas)
+                  Casa para 3, 5 y 6 personas
                 </a>
-              </li>
-              <li>
-              <a
-                href="https://www.booking.com/hotel/ar/carod-espacio-serrano"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-              >
-                Hotel Carod Espacio Serrano
-              </a>
-              </li>
-              <li>
-              <a
-                href="https://www.booking.com/hotel/ar/orfeo-suites-salsipuedes"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-              >
-                Orfeo Suites Hotel Sierras Chicas
-              </a>
-              </li>
-              <li>
-              <a
-                href="https://www.booking.com/hotel/ar/el-cimarron-casa-de-campo"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-              >
-                El Cimarron Casa de Campo (casas para 2, 4, 5 y 6 personas)
-              </a>
               </li>
             </ul>
             <h4>Airbnb</h4>
@@ -127,7 +97,7 @@ const Lodging = () => {
                 rel="noopener noreferrer"
                 className={styles.link}
               >
-                Casa de montaña (hasta 4 personas)
+                Casa para hasta 4 personas
               </a>
               </li>
               <li>
@@ -137,7 +107,7 @@ const Lodging = () => {
                 rel="noopener noreferrer"
                 className={styles.link}
               >
-                Casa soñada en las Sierras (hasta 7 personas)
+                Casa para hasta 7 personas
               </a>
               </li>
               <li>
@@ -147,7 +117,7 @@ const Lodging = () => {
                 rel="noopener noreferrer"
                 className={styles.link}
               >
-                Casa Sierras Cordoba Pileta Montana Rio Cerro Azul (hasta 8 personas)
+                Casa para hasta 8 personas
               </a>
               </li>
               <li>
@@ -157,7 +127,7 @@ const Lodging = () => {
                 rel="noopener noreferrer"
                 className={styles.link}
               >
-                El Erizo Refugio Boutique (hasta 2 personas)
+                Casa para hasta 2 personas
               </a>
               </li>
             </ul>
@@ -196,42 +166,12 @@ const Lodging = () => {
             <ul className={styles.list}>
               <li>
                 <a
-                  href="https://www.booking.com/hotel/ar/ama-c-rian-executive-ca3rdoba"
+                  href="https://www.booking.com/hotel/ar/nueva-cba-nazareno-xv"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.link}
                 >
-                  Hotel Amérian Executive Córdoba
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.booking.com/hotel/ar/selina-cordoba"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.link}
-                >
-                  Hotel Socialtel Nueva Cordoba
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.booking.com/hotel/ar/babel-nueva-cordoba"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.link}
-                >
-                  Departamentos Babel Nueva Córdoba (para 2, 4 y 8 personas)
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.booking.com/hotel/ar/melina"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.link}
-                >
-                  Departamentos Mediterraneo (para 4 personas)
+                  Departamento para 2 personas
                 </a>
               </li>
               <li>
@@ -241,17 +181,37 @@ const Lodging = () => {
                   rel="noopener noreferrer"
                   className={styles.link}
                 >
-                  El apartamento Nueva Cordoba (para 3 personas)
+                  Departamento para 3 personas
                 </a>
               </li>
               <li>
                 <a
-                  href="https://www.booking.com/hotel/ar/nueva-cba-nazareno-xv"
+                  href="https://www.booking.com/hotel/ar/babel-nueva-cordoba"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.link}
                 >
-                  Departamento Nueva Cba, Nazareno XV (para 2 personas)
+                  Departamentos para 2, 3, 4, 6 y 8 personas
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.booking.com/hotel/ar/ama-c-rian-executive-ca3rdoba"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.link}
+                >
+                  Hotel Amérian (habitaciones para 1-2 personas)
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.booking.com/hotel/ar/selina-cordoba"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.link}
+                >
+                  Hotel Socialtel (habitaciones para 2-4 personas)
                 </a>
               </li>
             </ul>
@@ -264,7 +224,7 @@ const Lodging = () => {
                   rel="noopener noreferrer"
                   className={styles.link}
                 >
-                  Tribeca, cálido y renovado depto en Nueva Córdoba (hasta 4 personas)
+                  Departamento para hasta 4 personas
                 </a>
               </li>
               <li>
@@ -274,17 +234,7 @@ const Lodging = () => {
                   rel="noopener noreferrer"
                   className={styles.link}
                 >
-                  Departamento cómodo y luminoso (hasta 4 personas)
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.airbnb.com.ar/rooms/1066015212599551419"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.link}
-                >
-                  Dpto Nueva Cba con cochera (hasta 3 personas)
+                  Departamento para hasta 4 personas
                 </a>
               </li>
               <li>
@@ -294,17 +244,7 @@ const Lodging = () => {
                   rel="noopener noreferrer"
                   className={styles.link}
                 >
-                  Departamento con terraza Nueva Córdoba (hasta 3 personas)
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.airbnb.com.ar/rooms/1179814858431996140"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.link}
-                >
-                  Nórdico - Moderno Depto en Nva Cba (hasta 3 personas)
+                  Departamento para hasta 3 personas
                 </a>
               </li>
               <li>
@@ -314,7 +254,7 @@ const Lodging = () => {
                   rel="noopener noreferrer"
                   className={styles.link}
                 >
-                  Departamento 1 dorm. en Nva. Cba. 6B (hasta 3 personas)
+                  Departamento para hasta 3 personas
                 </a>
               </li>
               <li>
@@ -324,7 +264,7 @@ const Lodging = () => {
                   rel="noopener noreferrer"
                   className={styles.link}
                 >
-                  Nueva Córdoba Temporal 3B (hasta 2 personas)
+                  Departamento para hasta 2 personas
                 </a>
               </li>
               <li>
@@ -334,7 +274,7 @@ const Lodging = () => {
                   rel="noopener noreferrer"
                   className={styles.link}
                 >
-                  Guarida Güemes (hasta 2 personas)
+                  Departamento para hasta 2 personas
                 </a>
               </li>
             </ul>
@@ -364,7 +304,7 @@ const Lodging = () => {
               </svg>
             </Button>
         </article>
-        <p className={styles.paragraph}>Obvio que estas opciones son solo algunas de las que hay disponibles y las proponemos como un punto de partida para orientarte. ¡Podés seguir investigando por tu cuenta y por ahí encontrás algo que te guste más!</p>
+        <p className={styles.paragraph}>Obvio que estas opciones son solo algunas de las que hay disponibles y las proponemos como un punto de partida para orientarte. Podés seguir investigando por tu cuenta y por ahí encontrás algo que te guste más.</p>
       </div>
     </div>
   );

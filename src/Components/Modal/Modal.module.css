@@ -17,6 +17,8 @@
   background-color: var(--background-container);
   border: var(--border);
   box-shadow: var(--shadow-primary);
+  max-height: 90vh;
+  overflow: scroll;
   padding: 1.5rem;
   margin: 1rem;
   border-radius: 5px;
@@ -36,6 +38,7 @@
   font-size: 1.1rem;
   margin: 0 0 1.5rem 0;
   color: var(--text);
+  word-wrap: break-word;
 }
 
 .actions {
@@ -78,5 +81,6 @@
   .modal {
     padding: 2rem;
     max-width: 600px;
+    max-height: 80vh;
   }
 }

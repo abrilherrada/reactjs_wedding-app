@@ -44,14 +44,14 @@ const ReservationStatus = ({
 
       <div className={styles.actions}>
         <Button 
-          onClick={onModify}
-        >
-          Modificar reserva
-        </Button>
-        <Button 
           onClick={() => setShowConfirmModal(true)}
         >
           Cancelar reserva
+        </Button>
+        <Button 
+          onClick={onModify}
+        >
+          Modificar reserva
         </Button>
       </div>
 

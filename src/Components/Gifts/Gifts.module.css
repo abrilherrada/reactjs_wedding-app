@@ -22,7 +22,7 @@
 
 .content {
   width: 100%;
-  max-width: 610px;
+  max-width: 650px;
   display: flex;
   flex-direction: column;
 }
@@ -36,6 +36,7 @@
 }
 
 .giftsGrid {
+  max-width: 610px;
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;

@@ -18,6 +18,7 @@ const ACTIONS = {
   SET_STATUS: 'SET_STATUS',
   TOGGLE_CONFIRM_MODAL: 'TOGGLE_CONFIRM_MODAL',
   TOGGLE_DECLINE_MODAL: 'TOGGLE_DECLINE_MODAL',
+  TOGGLE_NO_CHANGES_MODAL: 'TOGGLE_NO_CHANGES_MODAL',
   RESET_STATUS: 'RESET_STATUS'
 };
 
@@ -35,6 +36,7 @@ const createInitialState = (guestInfo) => ({
   decliningAll: false,
   showConfirmModal: false,
   showDeclineModal: false,
+  showNoChangesModal: false,
   status: { type: null, message: null }
 });
 
@@ -102,6 +104,11 @@ const formReducer = (state, action) => {
         ...state,
         showDeclineModal: action.payload
       };
+    case ACTIONS.TOGGLE_NO_CHANGES_MODAL:
+      return {
+        ...state,
+        showNoChangesModal: action.payload
+      };
     case ACTIONS.RESET_STATUS:
       return {
         ...state,
@@ -112,27 +119,33 @@ const formReducer = (state, action) => {
   }
 };
 
-// Error handling utility
-const getErrorMessage = (error) => {
-  if (error.message?.includes('Network')) {
-    return 'No pudimos conectarnos al servidor. Fijate si tenés datos o si te anda bien el wifi.';
-  }
-  if (error.response?.status === 404) {
-    return 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por WhatsApp.';
-  }
-  if (error.response?.status === 400) {
-    return 'Los datos ingresados no son válidos. Intentá de nuevo.';
-  }
-  return 'Algo malió sal y tu respuesta no se guardó. Cruzá los dedos y probá de nuevo.';
+// Mensajes de error específicos del formulario
+const ERROR_MESSAGES = {
+  INVALID_DATA: 'Los datos ingresados no son válidos. Intentá de nuevo.'
 };
 
-const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = false }) => {
+// Mensajes para modales de UX
+const MODAL_MESSAGES = {
+  NO_CHANGES: 'La respuesta no tuvo modificaciones. Si querés hacer cambios, modificá la selección de invitados.'
+};
+
+const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, onError, isModifying = false }) => {
   const [state, dispatch] = useReducer(formReducer, guestInfo, createInitialState);
   const [anyAttending, setAnyAttending] = useState(false);
+  const [originalFormData, setOriginalFormData] = useState(null);
+  const [charCounts, setCharCounts] = useState({
+    dietaryRestrictionsInGroup: 0,
+    songRequest: 0,
+    additionalNotes: 0
+  });
+  const MAX_CHARS = 500;
+  const WARNING_THRESHOLD = 400;
 
   // Update form data when guestInfo changes
   useEffect(() => {
-    dispatch({ type: ACTIONS.SET_FORM_DATA, payload: createInitialState(guestInfo).formData });
+    const initialFormData = createInitialState(guestInfo).formData;
+    dispatch({ type: ACTIONS.SET_FORM_DATA, payload: initialFormData });
+    setOriginalFormData(initialFormData);
   }, [guestInfo]);
 
   // Pre-check main guest's checkbox if they're the only guest
@@ -143,7 +156,8 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
         payload: { guestType: 'mainGuest', index: null, attending: true }
       });
     }
-  }, []); // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Solo se ejecuta durante el montaje
 
   // Update anyAttending whenever formData changes
   useEffect(() => {
@@ -153,6 +167,41 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
     
     setAnyAttending(isAnyoneAttending);
   }, [state.formData, guestInfo.hasCompanion, guestInfo.hasChildren]);
+
+  // Actualizar contadores de caracteres cuando cambia el formulario
+  useEffect(() => {
+    setCharCounts({
+      dietaryRestrictionsInGroup: state.formData.dietaryRestrictionsInGroup?.length || 0,
+      songRequest: state.formData.songRequest?.length || 0,
+      additionalNotes: state.formData.additionalNotes?.length || 0
+    });
+  }, [state.formData]);
+
+  // Función para verificar si hubo cambios en el formulario
+  const checkForChanges = () => {
+    if (!originalFormData) return true;
+
+    // Verificar cambios en el invitado principal
+    if (originalFormData.mainGuest.attending !== state.formData.mainGuest.attending) return true;
+
+    // Verificar cambios en el acompañante
+    if (guestInfo.hasCompanion && 
+        originalFormData.companion?.attending !== state.formData.companion?.attending) return true;
+
+    // Verificar cambios en los niños
+    if (guestInfo.hasChildren) {
+      for (let i = 0; i < originalFormData.children.length; i++) {
+        if (originalFormData.children[i]?.attending !== state.formData.children[i]?.attending) return true;
+      }
+    }
+
+    // Verificar cambios en los campos de texto
+    if (originalFormData.dietaryRestrictionsInGroup !== state.formData.dietaryRestrictionsInGroup) return true;
+    if (originalFormData.songRequest !== state.formData.songRequest) return true;
+    if (originalFormData.additionalNotes !== state.formData.additionalNotes) return true;
+
+    return false;
+  };
 
   const handleAttendanceChange = useCallback((guestType, index = null) => (e) => {
     dispatch({
@@ -229,21 +278,21 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
           <span className={styles.itemTitle}>Restricciones alimentarias:&nbsp;</span>
           <span className={styles.itemText}>{state.formData.dietaryRestrictionsInGroup}</span>
         </p>
-      }
+    }
       {
       state.formData.songRequest &&
         <p className={styles.summaryItem}>
           <span className={styles.itemTitle}>Música sugerida:&nbsp;</span>
           <span className={styles.itemText}>{state.formData.songRequest}</span>
         </p>
-      }
+    }
       {
       state.formData.additionalNotes &&
         <p className={styles.summaryItem}>
           <span className={styles.itemTitle}>Notas adicionales:&nbsp;</span>
           <span className={styles.itemText}>{state.formData.additionalNotes}</span>
         </p>
-      }
+    }
     </>
 
     return message;
@@ -251,6 +300,13 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Verificar si hubo cambios en el formulario solo si estamos modificando una respuesta existente
+    if (isModifying && !checkForChanges()) {
+      dispatch({ type: ACTIONS.TOGGLE_NO_CHANGES_MODAL, payload: true });
+      return;
+    }
+    
     dispatch({ type: ACTIONS.TOGGLE_CONFIRM_MODAL, payload: true });
   };
 
@@ -259,20 +315,19 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
     dispatch({ type: ACTIONS.RESET_STATUS });
 
     try {
-      // If no one is attending and this is not a modification, set all to false
       const updateData = {
-        invitationId: guestInfo.invitationId,
+        _id: guestInfo._id,
         mainGuest: {
           ...state.formData.mainGuest,
-          attending: !isModifying && !anyAttending ? false : state.formData.mainGuest?.attending
+          attending: state.formData.mainGuest?.attending || false
         },
         companion: guestInfo.hasCompanion ? {
           ...state.formData.companion,
-          attending: !isModifying && !anyAttending ? false : state.formData.companion?.attending
+          attending: state.formData.companion?.attending || false
         } : null,
         children: guestInfo.hasChildren ? state.formData.children.map(child => ({
           ...child,
-          attending: !isModifying && !anyAttending ? false : child.attending
+          attending: child.attending || false
         })) : [],
         dietaryRestrictionsInGroup: anyAttending ? state.formData.dietaryRestrictionsInGroup : '',
         songRequest: state.formData.songRequest,
@@ -282,13 +337,18 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
       const updatedGuestInfo = await updateRSVPStatus(updateData);
       onSubmitSuccess(updatedGuestInfo);
     } catch (err) {
-      dispatch({
-        type: ACTIONS.SET_STATUS,
-        payload: {
-          type: 'error',
-          message: getErrorMessage(err)
-        }
-      });
+      if (err.response?.status === 400) {
+        dispatch({
+          type: ACTIONS.SET_STATUS,
+          payload: {
+            type: 'error',
+            message: ERROR_MESSAGES.INVALID_DATA
+          }
+        });
+      } else {
+        // Propagar errores de alto nivel al componente padre
+        onError?.(err);
+      }
     } finally {
       dispatch({ type: ACTIONS.SET_SUBMITTING, payload: false });
     }
@@ -300,7 +360,7 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
 
     try {
       const updateData = {
-        invitationId: guestInfo.invitationId,
+        _id: guestInfo._id,
         mainGuest: { ...guestInfo.mainGuest, attending: false },
         companion: guestInfo.hasCompanion ? { ...guestInfo.companion, attending: false } : null,
         children: guestInfo.hasChildren ? guestInfo.children.map(child => ({ ...child, attending: false })) : [],
@@ -310,13 +370,18 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
       const updatedGuestInfo = await updateRSVPStatus(updateData);
       onSubmitSuccess(updatedGuestInfo);
     } catch (err) {
-      dispatch({
-        type: ACTIONS.SET_STATUS,
-        payload: {
-          type: 'error',
-          message: getErrorMessage(err)
-        }
-      });
+      if (err.response?.status === 400) {
+        dispatch({
+          type: ACTIONS.SET_STATUS,
+          payload: {
+            type: 'error',
+            message: ERROR_MESSAGES.INVALID_DATA
+          }
+        });
+      } else {
+        // Propagar otros errores al padre
+        onError?.(err);
+      }
     } finally {
       dispatch({ type: ACTIONS.SET_DECLINING_ALL, payload: false });
     }
@@ -391,7 +456,11 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
                 value={state.formData.dietaryRestrictionsInGroup}
                 onChange={handleInputChange('dietaryRestrictionsInGroup')}
                 placeholder={!guestInfo.hasCompanion && !guestInfo.hasChildren ? "Indicanos si tenés alguna restricción alimentaria." : "Indicanos si alguien del grupo tiene alguna restricción alimentaria."}
+                maxLength={MAX_CHARS}
               />
+              <div className={`${styles.charCounter} ${charCounts.dietaryRestrictionsInGroup >= WARNING_THRESHOLD ? styles.warning : ''}`}>
+                {charCounts.dietaryRestrictionsInGroup}/{MAX_CHARS} caracteres
+              </div>
             </div>
         : null
         }
@@ -403,7 +472,11 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
             value={state.formData.songRequest}
             onChange={handleInputChange('songRequest')}
             placeholder="¡Ayudanos a armar la playlist!"
+            maxLength={MAX_CHARS}
           />
+          <div className={`${styles.charCounter} ${charCounts.songRequest >= WARNING_THRESHOLD ? styles.warning : ''}`}>
+            {charCounts.songRequest}/{MAX_CHARS} caracteres
+          </div>
         </div>
 
         <div className={styles.inputGroup}>
@@ -413,7 +486,11 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
             value={state.formData.additionalNotes}
             onChange={handleInputChange('additionalNotes')}
             placeholder="¿Hay algo más que quieras agregar?"
+            maxLength={MAX_CHARS}
           />
+          <div className={`${styles.charCounter} ${charCounts.additionalNotes >= WARNING_THRESHOLD ? styles.warning : ''}`}>
+            {charCounts.additionalNotes}/{MAX_CHARS} caracteres
+          </div>
         </div>
 
         <div className={styles.buttonContainer}>
@@ -468,6 +545,13 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
         onConfirm={handleDeclineAll}
         onCancel={handleCancelDecline}
       />
+
+      <Modal
+        isOpen={state.showNoChangesModal}
+        title="Sin cambios"
+        message={MODAL_MESSAGES.NO_CHANGES}
+        onCancel={() => dispatch({ type: ACTIONS.TOGGLE_NO_CHANGES_MODAL, payload: false })}
+      />
       </div>
     </>
   );
@@ -477,6 +561,7 @@ AttendanceForm.propTypes = {
   guestInfo: GuestInfoShape.isRequired,
   onSubmitSuccess: PropTypes.func.isRequired,
   onGoBack: PropTypes.func.isRequired,
+  onError: PropTypes.func,
   isModifying: PropTypes.bool
 };
 

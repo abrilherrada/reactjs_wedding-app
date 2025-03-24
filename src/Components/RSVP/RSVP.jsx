@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useRSVP } from '../../context/useRSVP';
+import { useRSVP } from '../../context/RSVP/useRSVP';
 import AttendanceForm from './AttendanceForm/AttendanceForm';
 import InitialChoice from './InitialChoice/InitialChoice';
 import AttendanceStatus from './AttendanceStatus/AttendanceStatus';
@@ -12,21 +12,28 @@ import styles from './RSVP.module.css';
 const hasAttendanceResponse = (guest) => guest.attending !== null;
 
 const ERROR_MESSAGES = {
-  NO_INVITATION_ID: 'Para confirmar tu asistencia, usá el enlace que te enviamos por WhatsApp.',
+  // Errores de autenticación/autorización
   INVALID_INVITATION: 'No pudimos encontrar tu invitación. Revisá que el enlace que estás usando sea el mismo que te enviamos por WhatsApp.',
-  UNKNOWN_ERROR: 'No pudimos cargar tu información. Intentá de nuevo.'
+  
+  // Error genérico (cubre errores de red y servidor)
+  UNKNOWN_ERROR: 'No pudimos procesar tu solicitud. Fijate si tenés datos o si te anda bien el wifi, e intentá de nuevo.'
 };
 
 const getInvitationIdFromUrl = () => {
   const params = new URLSearchParams(window.location.search);
-  return params.get('invitationId');
+  return params.get('inv');
 };
 
-const getErrorMessage = (status) => {
-  if (!status?.type) return null;
-  if (status.status === 404) return ERROR_MESSAGES.INVALID_INVITATION;
-  if (!status.status) return ERROR_MESSAGES.NO_INVITATION_ID;
-  if (status.status >= 500) return ERROR_MESSAGES.UNKNOWN_ERROR;
+const getErrorMessage = (error) => {
+  if (!error) return null;
+  
+  // Errores de invitación (formato inválido o no encontrada)
+  if (error.response?.status === 400 || error.status === 400 || 
+      error.response?.status === 404 || error.status === 404) {
+    return ERROR_MESSAGES.INVALID_INVITATION;
+  }
+  
+  // Error genérico (cubre tanto errores de red como errores del servidor)
   return ERROR_MESSAGES.UNKNOWN_ERROR;
 };
 
@@ -52,7 +59,7 @@ const RSVP = () => {
     if (!invitationId) {
       setStatus({
         type: 'error',
-        status: null
+        message: ERROR_MESSAGES.INVALID_INVITATION
       });
       setLoading(false);
       return;
@@ -98,6 +105,14 @@ const RSVP = () => {
     setStatus({ type: null, message: null });
   }, [setStatus]);
 
+  const handleError = useCallback((error) => {
+    setShowAttendanceForm(false);
+    setStatus({
+      type: 'error',
+      message: getErrorMessage(error)
+    });
+  }, [setStatus]);
+
   const renderContent = useCallback(() => {
     if (showAttendanceForm) {
       return (
@@ -105,6 +120,7 @@ const RSVP = () => {
           guestInfo={guestInfo}
           onSubmitSuccess={handleFormSuccess}
           onGoBack={handleGoBack}
+          onError={handleError}
           isModifying={hasResponse}
         />
       );
@@ -126,6 +142,7 @@ const RSVP = () => {
           <p className={`${styles.message} ${styles[status.type]}`}>
             <span className={styles.icon}>
             {status.type === 'success' ? <CheckIcon /> : null }
+            {status.type === 'error' ? <WarningIcon /> : null }
             </span>
             <span>{status.message}</span>
           </p>
@@ -145,7 +162,8 @@ const RSVP = () => {
     handleFormSuccess,
     handleGoBack,
     handleDeclineSuccess,
-    handleModifyResponse
+    handleModifyResponse,
+    handleError
   ]);
 
   if (initialLoading) {
@@ -165,7 +183,7 @@ const RSVP = () => {
             <span className={styles.icon}>
               {status.type === 'error' ? <WarningIcon /> : null}
             </span>
-            <span>{getErrorMessage(status)}</span>
+            <span>{status.message || getErrorMessage(status)}</span>
           </p>
         </div>
       </div>
