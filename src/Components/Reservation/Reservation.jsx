@@ -39,6 +39,9 @@ const Reservation = ({reservationType, onReservationChange}) => {
           type: 'error',
           message: ERROR_MESSAGES.NO_INVITATION_ID
         });
+        if (shouldSetLoading) {
+          setLoading(false);
+        }
         return;
       }
 
@@ -65,6 +68,16 @@ const Reservation = ({reservationType, onReservationChange}) => {
       fetchRef.current(true);
     }
   }, [guestInfo, rsvpLoading]);
+
+  useEffect(() => {
+    if (!invitationId) {
+      setLoading(false);
+      setStatus({
+        type: 'error',
+        message: ERROR_MESSAGES.NO_INVITATION_ID
+      });
+    }
+  }, [invitationId]);
 
   useEffect(() => {
     onReservationChange?.({
