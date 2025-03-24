@@ -59,7 +59,7 @@ const RSVP = () => {
     if (!invitationId) {
       setStatus({
         type: 'error',
-        status: null
+        message: ERROR_MESSAGES.INVALID_INVITATION
       });
       setLoading(false);
       return;
@@ -183,7 +183,7 @@ const RSVP = () => {
             <span className={styles.icon}>
               {status.type === 'error' ? <WarningIcon /> : null}
             </span>
-            <span>{getErrorMessage(status)}</span>
+            <span>{status.message || getErrorMessage(status)}</span>
           </p>
         </div>
       </div>
