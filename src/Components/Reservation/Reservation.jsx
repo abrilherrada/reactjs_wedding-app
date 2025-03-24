@@ -64,7 +64,15 @@ const Reservation = ({reservationType, onReservationChange}) => {
 
   // Initial fetch
   useEffect(() => {
-    if (!rsvpLoading && guestInfo) {
+    if (!rsvpLoading) {
+      if (!guestInfo) {
+        setLoading(false);
+        setStatus({
+          type: 'error',
+          message: ERROR_MESSAGES.NO_INVITATION_ID
+        });
+        return;
+      }
       fetchRef.current(true);
     }
   }, [guestInfo, rsvpLoading]);
