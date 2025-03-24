@@ -50,8 +50,9 @@ export const updateRSVPStatus = async (updateData) => {
     const data = await response.json();
     return data.invitation || data; // Handle both formats for backward compatibility
   } catch (error) {
-    const customError = new Error();
+    const customError = new Error('Error al actualizar la invitación');
     customError.status = error.status || 500;
+    customError.response = error;
     throw customError;
   }
 };
