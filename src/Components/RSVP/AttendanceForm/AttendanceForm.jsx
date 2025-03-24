@@ -259,20 +259,19 @@ const AttendanceForm = ({ guestInfo, onSubmitSuccess, onGoBack, isModifying = fa
     dispatch({ type: ACTIONS.RESET_STATUS });
 
     try {
-      // If no one is attending and this is not a modification, set all to false
       const updateData = {
         _id: guestInfo._id,
         mainGuest: {
           ...state.formData.mainGuest,
-          attending: !isModifying && !anyAttending ? false : state.formData.mainGuest?.attending
+          attending: state.formData.mainGuest?.attending || false
         },
         companion: guestInfo.hasCompanion ? {
           ...state.formData.companion,
-          attending: !isModifying && !anyAttending ? false : state.formData.companion?.attending
+          attending: state.formData.companion?.attending || false
         } : null,
         children: guestInfo.hasChildren ? state.formData.children.map(child => ({
           ...child,
-          attending: !isModifying && !anyAttending ? false : child.attending
+          attending: child.attending || false
         })) : [],
         dietaryRestrictionsInGroup: anyAttending ? state.formData.dietaryRestrictionsInGroup : '',
         songRequest: state.formData.songRequest,
