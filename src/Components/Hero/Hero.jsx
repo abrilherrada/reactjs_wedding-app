@@ -10,14 +10,16 @@ const Hero = () => {
     <section className={styles.heroContainer}>
       <ErrorBoundary>
         <div className={styles.content}>
-          <h1 className={styles.headline}>¡EXTRA, EXTRA!</h1>
-          <div className={styles.imageContainer}>
-            <img 
-              src="/images/hero.jpg" 
-              alt="Happy couple" 
-              className={styles.heroImage}
-            />
-            <p className={styles.imageCaption}>Rumbo al espacio (¡y al altar!): Abril y Juan a bordo de su nave en una misión intergaláctica de risas y amor.</p>
+          <div className={styles.hero}>
+            <h1 className={styles.headline}>¡EXTRA, EXTRA!</h1>
+            <div className={styles.imageContainer}>
+              <img 
+                src="/images/hero.jpg" 
+                alt="Abril y Juan" 
+                className={styles.heroImage}
+              />
+              <p className={styles.imageCaption}>Rumbo al espacio (¡y al altar!): Abril y Juan a bordo de su nave en una misión intergaláctica de risas y amor.</p>
+            </div>
           </div>
 
           <article className={styles.articleContent}>
@@ -29,7 +31,7 @@ const Hero = () => {
 
               <div className={`${styles.expandableContent} ${isExpanded ? styles.expanded : ''}`}>
                 <p>
-                  Esta historia de amor comenzó en 2018. Después de varios años de cruzarse en conferencias, una conversación por Instagram marcó el inicio de algo especial. Desde Nueva York, Juan preguntó en una encuesta si debía animarse a actuar en un show de standup, y Abril no dudó en alentarlo. Esa misma charla llevó a una invitación de Abril a tomar algo cuando Juan regresara a Argentina con el pretexto de contarle cómo le había ido en el examen de Lingüística para el que estaba estudiando (aunque, irónicamente, Abril no se presentó al examen y Juan no toma alcohol).
+                  Esta historia de amor comenzó en 2018. Después de varios años de cruzarse en conferencias, una conversación por Instagram marcó el inicio de algo especial. Desde Nueva York, Juan preguntó en una encuesta si debía animarse a actuar en un show de standup, y Abril no dudó en alentarlo. Esa misma charla llevó a una invitación de Abril a tomar algo cuando Juan regresara a Argentina con el pretexto de contarle cómo le había ido en el examen para el que estaba estudiando (aunque, irónicamente, Abril no se presentó al examen y Juan no toma alcohol).
                 </p>
                 <p>
                   Desde entonces, han compartido viajes, proyectos y la adopción de tres adorables perros, demostrando que el amor es una aventura llena de sorpresas y momentos inolvidables.
