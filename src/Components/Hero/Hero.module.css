@@ -13,7 +13,7 @@
 
 .headline {
   font-family: "Staatliches", serif;
-  font-size: clamp(2rem, 18vw, 10rem);
+  font-size: 4rem;
   text-align: center;
   line-height: 1;
   margin: 0;
@@ -87,7 +87,29 @@
   transform: rotate(180deg);
 }
 
+@media (min-width: 400px) {
+  .headline {
+    font-size: 4.5rem;
+  }
+}
+
+@media (min-width: 480px) {
+  .headline {
+    font-size: 5rem;
+  }
+}
+
+@media (min-width: 600px) {
+  .headline {
+    font-size: 7rem;
+  }
+}
+
 @media (min-width: 768px) {
+  .headline {
+    font-size: 9rem;
+  }
+
   .imageCaption {
     font-size: 1rem;
   }
