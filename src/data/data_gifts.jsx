@@ -21,7 +21,7 @@ const data = [
     title: "Un guía que hable inglés",
     image: "/images/gifts/tour-guide.jpg",
     price: "80 USD",
-    description: 'Seguro uno que solo hable japonés sale menos, pero, en japonés, solo entendemos "Nintento" "Toyota" y "Samurai". 🥷🏼'
+    description: 'Seguro uno que solo hable japonés sale menos, pero, en japonés, solo entendemos "Nintendo" "Toyota" y "Samurai". 🥷🏼'
   },
   {
     title: "Una noche de hotel en Tokio",
