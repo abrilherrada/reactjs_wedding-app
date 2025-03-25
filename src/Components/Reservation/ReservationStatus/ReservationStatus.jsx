@@ -37,21 +37,21 @@ const ReservationStatus = ({
       <div className={styles.guestList}>
         {guests.map((guest, index) => (
           <div key={`guest-${index}`}>
-            <span>🖤 {guest}</span>
+            <span>❤ {guest}</span>
           </div>
         ))}
       </div>
 
       <div className={styles.actions}>
         <Button 
-          onClick={() => setShowConfirmModal(true)}
-        >
-          Cancelar reserva
-        </Button>
-        <Button 
           onClick={onModify}
         >
           Modificar reserva
+        </Button>
+        <Button 
+          onClick={() => setShowConfirmModal(true)}
+        >
+          Cancelar reserva
         </Button>
       </div>
 

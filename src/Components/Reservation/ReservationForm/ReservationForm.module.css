@@ -120,6 +120,7 @@
 
 .confirmModalList {
   list-style-type: none;
+  padding: 0 0 0 1.5rem;
 }
 
 .confirmModalList li {
@@ -127,7 +128,7 @@
 }
 
 .confirmModalList li::marker {
-  content: "🖤  ";
+  content: "❤︎";
   font-size: 0.9rem;
 }
 

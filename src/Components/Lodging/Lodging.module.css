@@ -69,7 +69,7 @@
 }
 
 .list li::marker {
-  content: "🖤  ";
+  content: "❤︎  ";
   font-size: 0.9rem;
 }
 
