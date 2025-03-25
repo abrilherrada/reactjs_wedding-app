@@ -60,17 +60,11 @@
 
 .list {
   padding: 0 0 0 1.5rem;
-  list-style-type: none;
   margin: 0;
 }
 
 .list li {
   padding-bottom: 0.5rem;
-}
-
-.list li::marker {
-  content: "❤︎  ";
-  font-size: 0.9rem;
 }
 
 .link {
