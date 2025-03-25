@@ -5,6 +5,10 @@
 
 .hero {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .headline {
@@ -15,15 +19,6 @@
   margin: 0;
   padding-top: 6rem;
   letter-spacing: 1px;
-}
-
-.imageContainer {
-  width: 100%;
-  max-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
 }
 
 .heroImage {
