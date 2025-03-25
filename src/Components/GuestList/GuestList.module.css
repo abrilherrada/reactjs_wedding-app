@@ -72,7 +72,7 @@
 }
 
 .infoItem::marker {
-  content: "🖤  ";
+  content: "❤︎  ";
   font-size: 0.9rem;
 }
 
@@ -118,7 +118,7 @@
   padding: 1rem;
   border-bottom: var(--border);
   min-width: 0;
-  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .table th {
@@ -151,7 +151,7 @@
 }
 
 .guestList li::marker {
-  content: "🖤  ";
+  content: "❤︎  ";
   font-size: 0.8rem;
 }
 
