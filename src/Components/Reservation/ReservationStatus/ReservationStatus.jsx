@@ -34,13 +34,13 @@ const ReservationStatus = ({
     <div className={styles.container}>
       <h4>Tu reserva</h4>
       
-      <div className={styles.guestList}>
+      <ul className={styles.guestList}>
         {guests.map((guest, index) => (
-          <div key={`guest-${index}`}>
-            <span>❤ {guest}</span>
-          </div>
+          <li key={`guest-${index}`}>
+            {guest}
+          </li>
         ))}
-      </div>
+      </ul>
 
       <div className={styles.actions}>
         <Button 
