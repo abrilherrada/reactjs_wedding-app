@@ -11,15 +11,13 @@ const Hero = () => {
       <ErrorBoundary>
         <div className={styles.content}>
           <div className={styles.hero}>
-            <div className={styles.imageContainer}>
-              <h1 className={styles.headline}>¡EXTRA, EXTRA!</h1>
-              <img 
-                src="/images/hero.jpg" 
-                alt="Abril y Juan" 
-                className={styles.heroImage}
-              />
-              <p className={styles.imageCaption}>Rumbo al espacio (¡y al altar!): Abril y Juan a bordo de su nave en una misión intergaláctica de risas y amor.</p>
-            </div>
+            <h1 className={styles.headline}>¡EXTRA, EXTRA!</h1>
+            <img 
+              src="/images/hero.jpg" 
+              alt="Abril y Juan" 
+              className={styles.heroImage}
+            />
+            <p className={styles.imageCaption}>Rumbo al espacio (¡y al altar!): Abril y Juan a bordo de su nave en una misión intergaláctica de risas y amor.</p>
           </div>
 
           <article className={styles.articleContent}>
