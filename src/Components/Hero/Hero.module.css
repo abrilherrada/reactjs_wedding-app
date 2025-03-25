@@ -13,7 +13,7 @@
 
 .headline {
   font-family: "Staatliches", serif;
-  font-size: clamp(3.5rem, 18vw, 10rem);
+  font-size: clamp(2rem, 18vw, 10rem);
   text-align: center;
   line-height: 1;
   margin: 0;
