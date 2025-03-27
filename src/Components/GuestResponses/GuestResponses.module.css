@@ -1,0 +1,158 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  color: var(--text);
+  padding: 1.5rem 1rem;
+}
+
+.title {
+  font-family: "Staatliches", serif;
+  font-size: 2.5rem;
+  margin: 0;
+  line-height: 1;
+}
+
+.countContainer {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.count {
+  width: 100%;
+  border: var(--border);
+  border-radius: 5px;
+  box-shadow: var(--shadow-primary);
+  background-color: var(--background-container);
+  padding: 1rem;
+}
+
+.count p {
+  margin: 0.5rem 0 0 0;
+}
+
+.subtitle {
+  font-family: "Staatliches", serif;
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.text {
+  font-family: "Cutive", serif;
+  font-size: 1rem;
+  margin: 0;
+}
+
+
+.tableContainer {
+  width: 100%;
+  min-width: 600px;
+  max-width: 1200px;
+  border-radius: 5px;
+  border: var(--border);
+  box-shadow: var(--shadow-primary);
+  background-color: var(--background-container);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table tr {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+}
+
+.table thead,
+.table tbody {
+  display: table-row-group;
+}
+
+.table th,
+.table td {
+  padding: 1rem;
+  border-bottom: var(--border);
+  min-width: 0;
+  word-break: break-word;
+}
+
+.table th {
+  font-family: "Staatliches", sans-serif;
+  font-size: 1.25rem;
+  background-color: var(--text);
+  color: var(--background-container);
+  text-align: center;
+}
+
+.table td {
+  font-family: "Cutive", serif;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.lists {
+  display: flex;
+}
+
+.guestList {
+  margin: 0;
+  padding: 0 0 0 1.5rem;
+}
+
+.guestList li {
+  margin-bottom: 0.5rem;
+}
+
+.guestList li:last-child {
+  margin-bottom: 0;
+}
+
+.attending {
+  color: var(--text-success);
+}
+
+.notAttending {
+  color: var(--text-error);
+}
+
+.response {
+  text-align: center;
+  margin: 0;
+}
+
+.btn {
+  font-size: 1.25rem;
+  margin: 0 auto;
+}
+
+@media (max-width: 379px) {
+  .container {
+      padding: 1rem 0.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+      padding: 1.5rem 2rem;
+  }
+
+  .countContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+      padding: 2rem;
+  }
+}
