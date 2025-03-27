@@ -1,13 +1,34 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import Button from '../Button/Button';
 import Card from './Card/Card';
+import Modal from '../Modal/Modal';
 import PaymentMethod from './PaymentMethod/PaymentMethod';
 import data from '../../data/data_gifts';
 import styles from './Gifts.module.css';
 
 const Gifts = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const paymentMethodRef = useRef(null);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    
+    setTimeout(() => {
+      if (paymentMethodRef.current) {
+        const navbarHeight = 80;
+        
+        const elementPosition = paymentMethodRef.current.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - navbarHeight;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  }
 
   return (
     <div className={styles.container}>
@@ -22,10 +43,19 @@ const Gifts = () => {
             <p className={styles.description}>¿Qué nos podés regalar para un viaje a Japón? Te dejamos algunas ideas.</p>
             <div className={styles.giftsGrid}>
               {data.map((gift, index) => (
-                <Card key={index} {...gift} />
+                <Card key={index} {...gift} onClick={() => setShowModal(true)} />
               ))}
             </div>
-            <PaymentMethod />
+            <Modal
+              isOpen={showModal}
+              title= '¡Gracias!'
+              message='Tu regalo va a hacer que nuestra luna de miel sea aún más especial. ❤️ Para hacernos el regalo, solo tenés que enviarnos el monto del regalo por alguno de los medios de pago disponibles.'
+              onCancel= {handleCloseModal}
+              cancelText='Ver medios de pago'
+            />
+            <div ref={paymentMethodRef}>
+              <PaymentMethod />
+            </div>
           </div>
           <Button 
             onClick={() => setIsExpanded(!isExpanded)}
