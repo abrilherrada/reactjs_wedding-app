@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { getReservation } from '../../services/reservation_services';
 import { useRSVP } from '../../context/RSVP/useRSVP';
@@ -45,6 +45,21 @@ const Reservation = ({reservationType, onReservationChange}) => {
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState({ type: null, message: null });
   const fetchRef = useRef();
+  const messageRef = useRef(null);
+
+  const scrollToMessage = useCallback(() => {
+    if (messageRef.current) {
+      const navbarHeight = 100;
+
+      const elementPosition = messageRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, []);
 
   const invitationId = new URLSearchParams(window.location.search).get('inv');
 
@@ -127,6 +142,8 @@ const Reservation = ({reservationType, onReservationChange}) => {
       type: 'success',
       message: '¡Listo! Ya te guardamos tus lugares. 😎'
     });
+
+    setTimeout(scrollToMessage, 100);
   };
 
   const handleCancelSuccess = () => {
@@ -135,6 +152,8 @@ const Reservation = ({reservationType, onReservationChange}) => {
       type: 'success',
       message: '¡Listo! Cancelamos tu reserva.'
     });
+
+    setTimeout(scrollToMessage, 100);
   };
 
   const handleCancelError = () => {
@@ -142,13 +161,15 @@ const Reservation = ({reservationType, onReservationChange}) => {
       type: 'error',
       message: ERROR_MESSAGES.CANCEL_ERROR
     });
+
+    setTimeout(scrollToMessage, 100);
   };
 
   const renderContent = () => {
     if (status.type === 'error') {
       return (
         <>
-          <p className={`${styles.message} ${styles.error}`}>
+          <p ref={messageRef} className={`${styles.message} ${styles.error}`}>
             <span>
               <WarningIcon />
             </span>
@@ -169,7 +190,7 @@ const Reservation = ({reservationType, onReservationChange}) => {
     return (
       <>
         {status.type === 'success' && (
-          <p className={`${styles.message} ${styles.success}`}>
+          <p ref={messageRef} className={`${styles.message} ${styles.success}`}>
             <span>
               <CheckIcon />
             </span>

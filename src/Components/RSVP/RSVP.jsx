@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useRSVP } from '../../context/RSVP/useRSVP';
 import AttendanceForm from './AttendanceForm/AttendanceForm';
 import InitialChoice from './InitialChoice/InitialChoice';
@@ -40,6 +40,21 @@ const getErrorMessage = (error) => {
 const RSVP = () => {
   const { guestInfo, setGuestInfo, status, loading: initialLoading, fetchRSVPInfo, setStatus, setLoading } = useRSVP();
   const [showAttendanceForm, setShowAttendanceForm] = useState(false);
+  const messageRef = useRef(null);
+
+  const scrollToMessage = useCallback(() => {
+    if (messageRef.current) {
+      const navbarHeight = 100;
+
+      const elementPosition = messageRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, []);
 
   const hasResponse = useMemo(() => {
     if (!guestInfo) return false;
@@ -84,7 +99,9 @@ const RSVP = () => {
         ? 'Gracias por avisarnos. ¡Te vamos a extrañar!'
         : 'Gracias por confirmar tu asistencia. ¡Nos vemos ahí!'
     });
-  }, [setGuestInfo, setStatus]);
+
+    setTimeout(scrollToMessage, 100);
+  }, [setGuestInfo, setStatus, scrollToMessage]);
 
   const handleDeclineSuccess = useCallback((updatedData) => {
     setGuestInfo(updatedData);
@@ -93,7 +110,9 @@ const RSVP = () => {
       type: 'success',
       message: 'Gracias por avisarnos. ¡Te vamos a extrañar!'
     });
-  }, [setGuestInfo, setStatus]);
+
+    setTimeout(scrollToMessage, 100);
+  }, [setGuestInfo, setStatus, scrollToMessage]);
 
   const handleModifyResponse = useCallback(() => {
     setShowAttendanceForm(true);
@@ -111,7 +130,9 @@ const RSVP = () => {
       type: 'error',
       message: getErrorMessage(error)
     });
-  }, [setStatus]);
+
+    setTimeout(scrollToMessage, 100);
+  }, [setStatus, scrollToMessage]);
 
   const renderContent = useCallback(() => {
     if (showAttendanceForm) {
@@ -139,7 +160,7 @@ const RSVP = () => {
     return (
       <>
         {status.message && (
-          <p className={`${styles.message} ${styles[status.type]}`}>
+          <p ref={messageRef} className={`${styles.message} ${styles[status.type]}`}>
             <span className={styles.icon}>
             {status.type === 'success' ? <CheckIcon /> : null }
             {status.type === 'error' ? <WarningIcon /> : null }
@@ -179,7 +200,7 @@ const RSVP = () => {
           <h2>DE ASISTENCIA</h2>
         </header>
         <div className={styles.errorContainer}>
-          <p className={`${styles.message} ${styles[status.type]}`}>
+          <p ref={messageRef} className={`${styles.message} ${styles[status.type]}`}>
             <span className={styles.icon}>
               {status.type === 'error' ? <WarningIcon /> : null}
             </span>

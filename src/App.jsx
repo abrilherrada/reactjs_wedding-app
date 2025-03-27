@@ -3,8 +3,10 @@ import { RSVPProvider } from './context/RSVP/RSVPProvider';
 import { AuthProvider } from './context/Auth/AuthProvider';
 import { UserProvider } from './context/User/UserProvider';
 import Auth from './Components/Auth/Auth';
-import GuestList from './Components/GuestList/GuestList';
 import Dashboard from './Components/Dashboard/Dashboard';
+import SingleWedding from './Components/Dashboard/SingleWedding/SingleWedding';
+import GuestList from './Components/GuestList/GuestList';
+import GuestResponses from './Components/GuestResponses/GuestResponses';
 import PublicRoute from './routes/PublicRoute';
 import ProtectedRoute from './routes/ProtectedRoute';
 import './App.css';
@@ -33,7 +35,17 @@ const App = () => {
                 } />
                 <Route path="wedding/:id" element={
                   <ProtectedRoute>
+                    <SingleWedding />
+                  </ProtectedRoute>
+                } />
+                <Route path="wedding/:id/guests" element={
+                  <ProtectedRoute>
                     <GuestList />
+                  </ProtectedRoute>
+                } />
+                <Route path="wedding/:id/responses" element={
+                  <ProtectedRoute>
+                    <GuestResponses />
                   </ProtectedRoute>
                 } />
               </Routes>
