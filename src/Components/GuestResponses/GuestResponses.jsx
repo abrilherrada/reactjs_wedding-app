@@ -150,7 +150,7 @@ const handleGoToInvitation = (id) => {
               <th>Invitación #</th>
               <th>Invitados</th>
               <th>Boda</th>
-              <th>Alojamiento</th>
+              <th>Comida especial</th>
               <th>Transporte</th>
               <th>Acción</th>
             </tr>
@@ -195,6 +195,7 @@ const handleGoToInvitation = (id) => {
                   </p>
                 </td>
                 <td>
+                  <p>{invitation.dietaryRestrictionsInGroup}</p>
 
                 </td>
                 <td>
