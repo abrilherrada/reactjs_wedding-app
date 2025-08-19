@@ -63,4 +63,8 @@
   .title {
     min-height: 60px;
   }
+
+  .image {
+    height: 200px;
+  }
 }
