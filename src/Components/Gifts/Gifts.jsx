@@ -39,8 +39,9 @@ const Gifts = () => {
         <div className={styles.content}>
           <p className={styles.description}>El mejor regalo es tu presencia. No hace falta nada más. En serio.</p>
           <div className={`${styles.expandableContent} ${isExpanded ? styles.expanded : ''}`}>
-            <p className={styles.description}>¿Cómo? ¿Que no vas a aceptar un &quot;no&quot; como respuesta? Bueno, está bien, si insistís... Si querés regalarnos algo, podés regalarnos un pedacito de nuestra luna de miel. ¡Nos vamos a Japón!</p>
-            <p className={styles.description}>¿Qué nos podés regalar para un viaje a Japón? Te dejamos algunas ideas.</p>
+            <p className={styles.description}>¿Cómo? ¿Que no vas a aceptar un &quot;no&quot; como respuesta? Bueno, está bien, si insistís... Si querés regalarnos algo, podés regalarnos un pedacito de nuestra luna de miel. ¡Nos vamos a Disney y Nueva York!</p>
+            <p className={styles.description}>&quot;Pero, ¿no se iban a Japón?&quot; Sí, quisimos volar muy cerca del Sol, pero planificar una boda y un viaje a la otra punta del mundo se nos complicó, así que cambiamos un poquito los planes.</p>
+            <p className={styles.description}>Te dejamos algunas ideas nuevas de cómo podés sumarte a nuestra luna de miel 2.0.</p>
             <div className={styles.giftsGrid}>
               {data.map((gift, index) => (
                 <Card key={index} {...gift} onClick={() => setShowModal(true)} />
